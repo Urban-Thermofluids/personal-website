@@ -4,8 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yongling Zhao, PhD — Urban Climate · Fluid Mechanics · Heat Transfer</title>
-<meta name="description" content="Yongling Zhao is a Senior Scientist at ETH Zürich researching urban climate, multiscale heat transfer, and fluid mechanics for sustainable cities.">
+<meta name="description" content="Yongling Zhao is a Group Leader and Senior Scientist at ETH Zürich researching urban climate, multiscale heat transfer, and fluid mechanics for sustainable cities.">
 <link rel="canonical" href="https://yonglingzhao.com/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0e14'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='28' font-weight='700' fill='%23ff8a3d' text-anchor='middle'%3EYZ%3C/text%3E%3Cpath d='M10 52c8-6 14 4 22-2s14 2 22-4' stroke='%234cc9f0' stroke-width='2.5' fill='none' stroke-linecap='round' opacity='.85'/%3E%3C/svg%3E">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yonglingzhao.com/">
+<meta property="og:title" content="Yongling Zhao — Cooling cities through fluid physics">
+<meta property="og:description" content="Group Leader & Senior Scientist at ETH Zürich. Urban climate, multiscale heat transfer, and fluid mechanics for sustainable cities.">
+<meta property="og:image" content="https://yonglingzhao.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Yongling Zhao — Cooling cities through fluid physics">
+<meta name="twitter:description" content="Group Leader & Senior Scientist at ETH Zürich. Urban climate, multiscale heat transfer, and fluid mechanics for sustainable cities.">
+<meta name="twitter:image" content="https://yonglingzhao.com/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Yongling Zhao",
+  "honorificSuffix": "PhD",
+  "url": "https://yonglingzhao.com",
+  "jobTitle": "Group Leader & Senior Scientist",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "ETH Zürich",
+    "department": "Department of Mechanical and Process Engineering"
+  },
+  "alumniOf": "University of Sydney",
+  "email": "mailto:yozhao@ethz.ch",
+  "knowsAbout": ["urban climate", "fluid mechanics", "heat transfer", "urban heat island", "natural convection", "machine learning"],
+  "sameAs": ["https://scholar.google.com/citations?user=D3YrLggAAAAJ"]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -55,6 +86,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;
 
 /* ---------- hero ---------- */
 header{padding:170px 24px 100px;max-width:1080px;margin:0 auto}
+#flow{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;
+  mask-image:linear-gradient(180deg,black 0%,black 55%,transparent 95%);
+  -webkit-mask-image:linear-gradient(180deg,black 0%,black 55%,transparent 95%)}
+
+/* ---------- scroll reveal ---------- */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.6,.2,1),transform .7s cubic-bezier(.2,.6,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  html{scroll-behavior:auto}
+}
 .kicker{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px}
 .kicker::before{content:"";display:inline-block;width:28px;height:1px;background:var(--accent)}
 h1{font-size:clamp(40px,6.5vw,72px);font-weight:800;line-height:1.05;letter-spacing:-.03em;margin-bottom:24px}
@@ -114,6 +156,9 @@ h2{font-size:clamp(28px,4vw,38px);font-weight:700;letter-spacing:-.02em}
 .pub:first-of-type{border-top:1px solid var(--line)}
 .pub .year{font-family:var(--mono);font-size:14px;color:var(--accent);padding-top:2px}
 .pub h3{font-size:16px;font-weight:600;line-height:1.45;letter-spacing:-.01em}
+.pub h3 a{color:inherit;text-decoration:none;transition:color .2s}
+.pub h3 a:hover{color:var(--accent)}
+.pub h3 a::after{content:" ↗";font-size:12px;color:var(--text-3);font-weight:400}
 .pub .meta{font-size:13.5px;color:var(--text-3);margin-top:4px}
 .pub .meta .jrnl{color:var(--cool);font-style:italic}
 .pub-more{margin-top:28px}
@@ -157,6 +202,7 @@ footer a:hover{color:var(--accent)}
 </head>
 <body>
 <div class="grid-bg"></div>
+<canvas id="flow" aria-hidden="true"></canvas>
 
 <nav>
   <div class="nav-inner">
@@ -173,7 +219,7 @@ footer a:hover{color:var(--accent)}
 </nav>
 
 <header id="top">
-  <div class="kicker">Senior Scientist · ETH Zürich</div>
+  <div class="kicker">Group Leader &amp; Senior Scientist · ETH Zürich</div>
   <h1>Yongling Zhao<br><span class="grad">Cooling cities through fluid physics.</span></h1>
   <p class="hero-sub">I study <strong>urban climate, multiscale heat transfer, and fluid mechanics</strong> — from the transition physics of thermal boundary layers to how trees, wind, and buoyancy shape heat in real cities. My goal: science that helps cities beat the heat.</p>
   <div class="hero-actions">
@@ -196,7 +242,7 @@ footer a:hover{color:var(--accent)}
   </div>
   <div class="about-grid">
     <div class="about-text">
-      <p>I am a <strong>Senior Scientist (Oberassistent) and Lecturer</strong> in the Department of Mechanical and Process Engineering at ETH Zürich, working with the Chair of Building Physics. My research sits at the intersection of <strong>fluid engineering and multiscale heat transfer for sustainable systems and climate</strong>.</p>
+      <p>I am a <strong>Group Leader at the Chair of Building Physics (CBP)</strong> and <strong>Senior Scientist (Oberassistent) and Lecturer</strong> in the Department of Mechanical and Process Engineering at ETH Zürich. My research sits at the intersection of <strong>fluid engineering and multiscale heat transfer for sustainable systems and climate</strong>.</p>
       <p>I earned my PhD in fluid mechanics from the University of Sydney, where my work on the transition of natural convection boundary layers revealed resonance-triggered heat transfer enhancement and controlled transition mechanisms — published in the <strong>Journal of Fluid Mechanics</strong>. As a Visiting Scholar at the University of Cambridge (SNSF scientific exchange grant), I broadened this foundation toward urban-scale flows.</p>
       <p>Today my group combines <strong>water-tunnel PIV–LIF experiments, CFD and WRF simulations, and machine learning</strong> to understand and mitigate urban heat — from street-canyon buoyancy and tree cooling to city-scale heat island dynamics and heat-related policy.</p>
       <p>I serve as a guest editor at <em>Building and Environment</em> and on the editorial board of <em>City and Built Environment</em>, and I am always open to multidisciplinary collaboration.</p>
@@ -204,6 +250,7 @@ footer a:hover{color:var(--accent)}
     <aside class="side-card">
       <h3>// Trajectory</h3>
       <ul class="timeline">
+        <li><div class="t-when">2026 — now</div><div class="t-what">Group Leader</div><div class="t-where">Chair of Building Physics (CBP), ETH Zürich</div></li>
         <li><div class="t-when">2022 — now</div><div class="t-what">Senior Scientist / Lecturer</div><div class="t-where">ETH Zürich, D-MAVT</div></li>
         <li><div class="t-when">2019 — 2021</div><div class="t-what">Research Fellow / Lecturer</div><div class="t-where">ETH Zürich</div></li>
         <li><div class="t-when">2016 — 2019</div><div class="t-what">Postdoctoral Research Associate</div><div class="t-where">University of Sydney</div></li>
@@ -278,18 +325,18 @@ footer a:hover{color:var(--accent)}
     <button data-f="ml">Machine learning</button>
   </div>
   <div id="publist">
-    <div class="pub" data-t="urban"><div class="year">2026</div><div><h3>Asymmetric global urban cooling potential demands accelerated and context-specific actions</h3><div class="meta">Ding X, Fan Y, <strong>Zhao Y</strong>, Ürge-Vorsatz D, Ge J, Carmeliet J et al. · <span class="jrnl">Nature Communications</span> 17, 4239</div></div></div>
-    <div class="pub" data-t="urban"><div class="year">2023</div><div><h3>The time-evolving impact of tree size on nighttime street canyon microclimate</h3><div class="meta"><strong>Zhao Y*</strong>, Li H, Bardhan R, Kubilay A, Li Q, Carmeliet J · <span class="jrnl">Urban Climate</span> 49, 101528</div></div></div>
-    <div class="pub" data-t="ml"><div class="year">2023</div><div><h3>Machine learning-assisted mapping of city-scale air temperature</h3><div class="meta">Ding X, <strong>Zhao Y</strong>, Fan Y, Li Y, Ge J · <span class="jrnl">Building and Environment</span> 234, 110211</div></div></div>
-    <div class="pub" data-t="urban"><div class="year">2023</div><div><h3>Urban heat dome flow deflected by the Coriolis force</h3><div class="meta">Zhang Y, Wang X, Fan Y, <strong>Zhao Y*</strong>, Carmeliet J, Ge J · <span class="jrnl">Urban Climate</span> 49, 101449</div></div></div>
-    <div class="pub" data-t="urban"><div class="year">2022</div><div><h3>Enhancement of heat removal from street canyons due to buoyant approaching flow</h3><div class="meta"><strong>Zhao Y*</strong>, Xue Y, Mei S, Chao Y, Carmeliet J · <span class="jrnl">Building and Environment</span> 226, 109757</div></div></div>
-    <div class="pub" data-t="urban"><div class="year">2022</div><div><h3>Impact of green walls on ventilation and heat removal from street canyons</h3><div class="meta">Li H, <strong>Zhao Y*</strong>, Sützl B, Kubilay A, Carmeliet J · <span class="jrnl">Building and Environment</span> 214, 108945</div></div></div>
-    <div class="pub hidden" data-t="fund"><div class="year">2021</div><div><h3>Natural convection over vertical and horizontal heated flat surfaces</h3><div class="meta">Fan Y*, <strong>Zhao Y*</strong>, Torres JF, Xu F, Lei C, Li Y, Carmeliet J · <span class="jrnl">Physics of Fluids</span> 33, 101301</div></div></div>
-    <div class="pub hidden" data-t="urban"><div class="year">2021</div><div><h3>Buoyancy effects on the flows around flat and steep street canyons</h3><div class="meta"><strong>Zhao Y</strong>, Li H, Kubilay A, Carmeliet J · <span class="jrnl">Science of the Total Environment</span></div></div></div>
-    <div class="pub hidden" data-t="fund"><div class="year">2021</div><div><h3>Magnified heat transfer from curved surfaces: A scaling prediction</h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Physics of Fluids</span> 33, 021702</div></div></div>
-    <div class="pub hidden" data-t="urban"><div class="year">2020</div><div><h3>Isothermal and non-isothermal flow in street canyons</h3><div class="meta"><strong>Zhao Y</strong>, Chew LW, Kubilay A, Carmeliet J · <span class="jrnl">Building and Environment</span> 184</div></div></div>
-    <div class="pub hidden" data-t="fund"><div class="year">2017</div><div><h3>The K-type and H-type transitions of natural convection boundary layers</h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Journal of Fluid Mechanics</span> 824, 352–387</div></div></div>
-    <div class="pub hidden" data-t="fund"><div class="year">2013</div><div><h3>Resonance of the thermal boundary layer adjacent to an isothermally heated vertical surface</h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Journal of Fluid Mechanics</span> 724, 305–336</div></div></div>
+    <div class="pub" data-t="urban"><div class="year">2026</div><div><h3><a href="https://doi.org/10.1038/s41467-026-70662-2" target="_blank" rel="noopener">Asymmetric global urban cooling potential demands accelerated and context-specific actions</a></h3><div class="meta">Ding X, Fan Y, <strong>Zhao Y</strong>, Ürge-Vorsatz D, Ge J, Carmeliet J et al. · <span class="jrnl">Nature Communications</span> 17, 4239</div></div></div>
+    <div class="pub" data-t="urban"><div class="year">2023</div><div><h3><a href="https://scholar.google.com/scholar?q=%22The%20time-evolving%20impact%20of%20tree%20size%20on%20nighttime%20street%20canyon%20microclimate%22" target="_blank" rel="noopener">The time-evolving impact of tree size on nighttime street canyon microclimate</a></h3><div class="meta"><strong>Zhao Y*</strong>, Li H, Bardhan R, Kubilay A, Li Q, Carmeliet J · <span class="jrnl">Urban Climate</span> 49, 101528</div></div></div>
+    <div class="pub" data-t="ml"><div class="year">2023</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Machine%20learning-assisted%20mapping%20of%20city-scale%20air%20temperature%22" target="_blank" rel="noopener">Machine learning-assisted mapping of city-scale air temperature</a></h3><div class="meta">Ding X, <strong>Zhao Y</strong>, Fan Y, Li Y, Ge J · <span class="jrnl">Building and Environment</span> 234, 110211</div></div></div>
+    <div class="pub" data-t="urban"><div class="year">2023</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Urban%20heat%20dome%20flow%20deflected%20by%20the%20Coriolis%20force%22" target="_blank" rel="noopener">Urban heat dome flow deflected by the Coriolis force</a></h3><div class="meta">Zhang Y, Wang X, Fan Y, <strong>Zhao Y*</strong>, Carmeliet J, Ge J · <span class="jrnl">Urban Climate</span> 49, 101449</div></div></div>
+    <div class="pub" data-t="urban"><div class="year">2022</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Enhancement%20of%20heat%20removal%20from%20street%20canyons%20due%20to%20buoyant%20approaching%20flow%22" target="_blank" rel="noopener">Enhancement of heat removal from street canyons due to buoyant approaching flow</a></h3><div class="meta"><strong>Zhao Y*</strong>, Xue Y, Mei S, Chao Y, Carmeliet J · <span class="jrnl">Building and Environment</span> 226, 109757</div></div></div>
+    <div class="pub" data-t="urban"><div class="year">2022</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Impact%20of%20green%20walls%20on%20ventilation%20and%20heat%20removal%20from%20street%20canyons%22" target="_blank" rel="noopener">Impact of green walls on ventilation and heat removal from street canyons</a></h3><div class="meta">Li H, <strong>Zhao Y*</strong>, Sützl B, Kubilay A, Carmeliet J · <span class="jrnl">Building and Environment</span> 214, 108945</div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2021</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Natural%20convection%20over%20vertical%20and%20horizontal%20heated%20flat%20surfaces%22" target="_blank" rel="noopener">Natural convection over vertical and horizontal heated flat surfaces</a></h3><div class="meta">Fan Y*, <strong>Zhao Y*</strong>, Torres JF, Xu F, Lei C, Li Y, Carmeliet J · <span class="jrnl">Physics of Fluids</span> 33, 101301</div></div></div>
+    <div class="pub hidden" data-t="urban"><div class="year">2021</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Buoyancy%20effects%20on%20the%20flows%20around%20flat%20and%20steep%20street%20canyons%22" target="_blank" rel="noopener">Buoyancy effects on the flows around flat and steep street canyons</a></h3><div class="meta"><strong>Zhao Y</strong>, Li H, Kubilay A, Carmeliet J · <span class="jrnl">Science of the Total Environment</span></div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2021</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Magnified%20heat%20transfer%20from%20curved%20surfaces%3A%20A%20scaling%20prediction%22" target="_blank" rel="noopener">Magnified heat transfer from curved surfaces: A scaling prediction</a></h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Physics of Fluids</span> 33, 021702</div></div></div>
+    <div class="pub hidden" data-t="urban"><div class="year">2020</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Isothermal%20and%20non-isothermal%20flow%20in%20street%20canyons%22" target="_blank" rel="noopener">Isothermal and non-isothermal flow in street canyons</a></h3><div class="meta"><strong>Zhao Y</strong>, Chew LW, Kubilay A, Carmeliet J · <span class="jrnl">Building and Environment</span> 184</div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2017</div><div><h3><a href="https://scholar.google.com/scholar?q=%22The%20K-type%20and%20H-type%20transitions%20of%20natural%20convection%20boundary%20layers%22" target="_blank" rel="noopener">The K-type and H-type transitions of natural convection boundary layers</a></h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Journal of Fluid Mechanics</span> 824, 352–387</div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2013</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Resonance%20of%20the%20thermal%20boundary%20layer%20adjacent%20to%20an%20isothermally%20heated%20vertical%20surface%22" target="_blank" rel="noopener">Resonance of the thermal boundary layer adjacent to an isothermally heated vertical surface</a></h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Journal of Fluid Mechanics</span> 724, 305–336</div></div></div>
   </div>
   <div class="pub-more"><button class="btn btn-ghost" id="showAll" style="cursor:pointer;background:none">Show all selected ↓</button></div>
 </section>
@@ -369,6 +416,95 @@ document.getElementById('showAll').addEventListener('click',()=>{
 
 // close mobile menu on link click
 document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.nav-links').classList.remove('open')));
+
+// ---------- scroll reveal ----------
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(!reduced){
+  const targets = document.querySelectorAll('.sec-head, .card, .teach-card, .side-card, .about-text, .contact-wrap, .hero-stats, .pub-filters, #publist, .pub-more');
+  targets.forEach(t=>t.classList.add('reveal'));
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  targets.forEach(t=>io.observe(t));
+  // gentle stagger for research cards
+  document.querySelectorAll('.cards .card').forEach((c,i)=>c.style.transitionDelay=(i%3*90)+'ms');
+}
+
+// ---------- flow-field hero animation ----------
+(function(){
+  if(reduced) return;
+  const canvas = document.getElementById('flow');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles, raf;
+  const DPR = Math.min(window.devicePixelRatio||1, 2);
+  const isMobile = matchMedia('(max-width: 860px)').matches;
+  const N = isMobile ? 55 : 130;
+
+  function field(x, y, t){
+    // pseudo curl-noise: layered sines → smooth, divergence-light flow
+    const s = 0.0016;
+    const a = Math.sin(x*s*1.3 + t*0.00022) + Math.cos(y*s*1.7 - t*0.00017);
+    const b = Math.sin((x+y)*s*0.8 + t*0.00013);
+    return (a + b) * 1.35; // angle in radians-ish
+  }
+
+  function resize(){
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = W*DPR; canvas.height = H*DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+
+  function spawn(p){
+    p.x = Math.random()*W;
+    p.y = Math.random()*H;
+    p.life = 120 + Math.random()*260;
+    // warm particles rise-biased (heat), cool ones drift
+    p.warm = Math.random() < 0.62;
+    p.speed = 0.35 + Math.random()*0.75;
+    return p;
+  }
+
+  function init(){
+    resize();
+    particles = Array.from({length:N}, ()=>spawn({}));
+    ctx.clearRect(0,0,W,H);
+  }
+
+  let t0 = 0;
+  function tick(t){
+    raf = requestAnimationFrame(tick);
+    if(t - t0 < 1000/45) return; // ~45fps cap
+    t0 = t;
+    // fade old trails
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = 'rgba(0,0,0,0.055)';
+    ctx.fillRect(0,0,W,H);
+    ctx.globalCompositeOperation = 'source-over';
+    for(const p of particles){
+      const ang = field(p.x, p.y, t);
+      const vx = Math.cos(ang)*p.speed;
+      const vy = Math.sin(ang)*p.speed - (p.warm ? 0.22 : 0.02); // buoyancy for warm particles
+      const nx = p.x + vx, ny = p.y + vy;
+      ctx.strokeStyle = p.warm ? 'rgba(255,138,61,0.30)' : 'rgba(76,201,240,0.22)';
+      ctx.lineWidth = 1.1;
+      ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(nx,ny); ctx.stroke();
+      p.x = nx; p.y = ny;
+      if(--p.life <= 0 || p.x<-8 || p.x>W+8 || p.y<-8 || p.y>H+8) spawn(p);
+    }
+  }
+
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.hidden){ cancelAnimationFrame(raf); }
+    else { t0 = 0; raf = requestAnimationFrame(tick); }
+  });
+  let rto; window.addEventListener('resize', ()=>{ clearTimeout(rto); rto = setTimeout(init, 180); });
+  // fade the flow out as the hero scrolls away, so it never distracts from content
+  window.addEventListener('scroll', ()=>{
+    canvas.style.opacity = Math.max(0, 1 - window.scrollY/620);
+  }, {passive:true});
+  init();
+  raf = requestAnimationFrame(tick);
+})();
 </script>
 </body>
 </html>
