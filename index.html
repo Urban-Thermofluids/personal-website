@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yongling Zhao, PhD — Urban Climate · Fluid Mechanics · Heat Transfer</title>
+<meta name="description" content="Yongling Zhao is a Senior Scientist at ETH Zürich researching urban climate, multiscale heat transfer, and fluid mechanics for sustainable cities.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0e14;
+  --bg-2:#0f1520;
+  --bg-3:#141c2b;
+  --line:rgba(148,163,184,.12);
+  --line-2:rgba(148,163,184,.22);
+  --text:#e6edf5;
+  --text-2:#9aa8ba;
+  --text-3:#64748b;
+  --accent:#ff8a3d;
+  --accent-2:#ffb86b;
+  --cool:#4cc9f0;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --sans:'Inter',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(255,138,61,.3)}
+
+/* ---------- background grid ---------- */
+.grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(148,163,184,.045) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(148,163,184,.045) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,black 30%,transparent 90%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,black 30%,transparent 90%);
+}
+main,header,footer{position:relative;z-index:1}
+
+/* ---------- nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(10,14,20,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:64px}
+.logo{font-family:var(--mono);font-weight:600;font-size:15px;color:var(--text);text-decoration:none;letter-spacing:.02em}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:var(--text-2);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+.nav-links a.cta{color:var(--accent);font-family:var(--mono);font-size:13px}
+.menu-btn{display:none;background:none;border:1px solid var(--line-2);border-radius:8px;color:var(--text);padding:6px 12px;font-family:var(--mono);font-size:13px;cursor:pointer}
+
+/* ---------- hero ---------- */
+header{padding:170px 24px 100px;max-width:1080px;margin:0 auto}
+.kicker{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.kicker::before{content:"";display:inline-block;width:28px;height:1px;background:var(--accent)}
+h1{font-size:clamp(40px,6.5vw,72px);font-weight:800;line-height:1.05;letter-spacing:-.03em;margin-bottom:24px}
+h1 .grad{background:linear-gradient(92deg,#ff8a3d 0%,#ffb86b 45%,#4cc9f0 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-sub{max-width:640px;color:var(--text-2);font-size:18px;margin-bottom:36px}
+.hero-sub strong{color:var(--text);font-weight:600}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;transition:all .2s;font-family:var(--mono)}
+.btn-primary{background:var(--accent);color:#0a0e14}
+.btn-primary:hover{background:var(--accent-2);transform:translateY(-1px)}
+.btn-ghost{border:1px solid var(--line-2);color:var(--text)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.hero-stats{display:flex;gap:0;margin-top:64px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(15,21,32,.6)}
+.stat{flex:1;padding:22px 24px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.stat .num{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--text)}
+.stat .num em{color:var(--accent);font-style:normal}
+.stat .lbl{font-size:12.5px;color:var(--text-3);margin-top:4px;letter-spacing:.02em}
+
+/* ---------- sections ---------- */
+section{max-width:1080px;margin:0 auto;padding:88px 24px}
+.sec-head{margin-bottom:44px}
+.sec-tag{font-family:var(--mono);font-size:13px;color:var(--accent);margin-bottom:10px;display:block}
+h2{font-size:clamp(28px,4vw,38px);font-weight:700;letter-spacing:-.02em}
+.sec-head p{color:var(--text-2);max-width:620px;margin-top:12px}
+
+/* about */
+.about-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:48px;align-items:start}
+.about-text p{color:var(--text-2);margin-bottom:18px;font-size:16.5px}
+.about-text p strong{color:var(--text)}
+.side-card{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);padding:26px}
+.side-card h3{font-family:var(--mono);font-size:13px;color:var(--text-3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px}
+.timeline{list-style:none}
+.timeline li{padding:10px 0 10px 20px;border-left:1px solid var(--line-2);position:relative;margin-left:4px}
+.timeline li::before{content:"";position:absolute;left:-4.5px;top:17px;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.timeline .t-when{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.timeline .t-what{font-size:14.5px;color:var(--text);font-weight:500}
+.timeline .t-where{font-size:13px;color:var(--text-3)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:var(--mono);font-size:12px;color:var(--text-2);border:1px solid var(--line-2);padding:5px 12px;border-radius:999px}
+
+/* research */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);padding:26px;transition:border-color .25s,transform .25s;position:relative;overflow:hidden}
+.card:hover{border-color:rgba(255,138,61,.45);transform:translateY(-3px)}
+.card .idx{font-family:var(--mono);font-size:12px;color:var(--text-3)}
+.card h3{font-size:17px;font-weight:600;margin:10px 0 10px;letter-spacing:-.01em}
+.card p{font-size:14px;color:var(--text-2)}
+.card .tools{margin-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--cool)}
+
+/* publications */
+.pub-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+.pub-filters button{background:none;border:1px solid var(--line-2);color:var(--text-2);font-family:var(--mono);font-size:12.5px;padding:7px 16px;border-radius:999px;cursor:pointer;transition:all .2s}
+.pub-filters button:hover{color:var(--accent);border-color:var(--accent)}
+.pub-filters button.active{background:var(--accent);border-color:var(--accent);color:#0a0e14;font-weight:600}
+.pub{display:grid;grid-template-columns:64px 1fr;gap:18px;padding:20px 4px;border-bottom:1px solid var(--line)}
+.pub:first-of-type{border-top:1px solid var(--line)}
+.pub .year{font-family:var(--mono);font-size:14px;color:var(--accent);padding-top:2px}
+.pub h3{font-size:16px;font-weight:600;line-height:1.45;letter-spacing:-.01em}
+.pub .meta{font-size:13.5px;color:var(--text-3);margin-top:4px}
+.pub .meta .jrnl{color:var(--cool);font-style:italic}
+.pub-more{margin-top:28px}
+.hidden{display:none}
+
+/* teaching */
+.teach-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.teach-card{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);padding:28px}
+.teach-card h3{font-size:18px;font-weight:600;margin-bottom:10px}
+.teach-card .tag{font-family:var(--mono);font-size:12px;color:var(--accent);margin-bottom:12px;display:block}
+.teach-card p{font-size:14.5px;color:var(--text-2)}
+.teach-card ul{margin:12px 0 0 18px;color:var(--text-2);font-size:14.5px}
+.teach-card li{margin-bottom:6px}
+
+/* contact */
+.contact-wrap{border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--bg-2),var(--bg-3));padding:56px 48px;text-align:center;position:relative;overflow:hidden}
+.contact-wrap::before{content:"";position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:480px;height:240px;background:radial-gradient(ellipse,rgba(255,138,61,.14),transparent 70%);pointer-events:none}
+.contact-wrap h2{margin-bottom:14px}
+.contact-wrap p{color:var(--text-2);max-width:520px;margin:0 auto 30px}
+.contact-links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.addr{margin-top:30px;font-family:var(--mono);font-size:13px;color:var(--text-3)}
+
+footer{border-top:1px solid var(--line);padding:32px 24px;text-align:center;color:var(--text-3);font-size:13px;font-family:var(--mono)}
+footer a{color:var(--text-2);text-decoration:none}
+footer a:hover{color:var(--accent)}
+
+@media(max-width:860px){
+  .nav-links{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;gap:0;background:rgba(10,14,20,.97);border-bottom:1px solid var(--line);padding:8px 0}
+  .nav-links.open{display:flex}
+  .nav-links li{padding:12px 24px}
+  .menu-btn{display:block}
+  .about-grid{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr}
+  .teach-grid{grid-template-columns:1fr}
+  .hero-stats{flex-direction:column}
+  .stat{border-right:none;border-bottom:1px solid var(--line)}
+  .stat:last-child{border-bottom:none}
+  .contact-wrap{padding:40px 24px}
+}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#top">yongling<span>.</span>info</a>
+    <button class="menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('open')">menu</button>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#teaching">Teaching</a></li>
+      <li><a href="#contact" class="cta">→ Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header id="top">
+  <div class="kicker">Senior Scientist · ETH Zürich</div>
+  <h1>Yongling Zhao<br><span class="grad">Cooling cities through fluid physics.</span></h1>
+  <p class="hero-sub">I study <strong>urban climate, multiscale heat transfer, and fluid mechanics</strong> — from the transition physics of thermal boundary layers to how trees, wind, and buoyancy shape heat in real cities. My goal: science that helps cities beat the heat.</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="#research">Explore research</a>
+    <a class="btn btn-ghost" href="https://scholar.google.com/citations?user=D3YrLggAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar ↗</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="num">40<em>+</em></div><div class="lbl">Peer-reviewed publications</div></div>
+    <div class="stat"><div class="num">2013 <em>→</em> 2026</div><div class="lbl">J. Fluid Mech. to Nature Communications</div></div>
+    <div class="stat"><div class="num">IHTC-16</div><div class="lbl">Keynote, Int. Heat Transfer Conf.</div></div>
+    <div class="stat"><div class="num">5 <em>cities</em></div><div class="lbl">Cross-city cooling trend analysis</div></div>
+  </div>
+</header>
+
+<main>
+<section id="about">
+  <div class="sec-head">
+    <span class="sec-tag">01 / about</span>
+    <h2>About</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I am a <strong>Senior Scientist (Oberassistent) and Lecturer</strong> in the Department of Mechanical and Process Engineering at ETH Zürich, working with the Chair of Building Physics. My research sits at the intersection of <strong>fluid engineering and multiscale heat transfer for sustainable systems and climate</strong>.</p>
+      <p>I earned my PhD in fluid mechanics from the University of Sydney, where my work on the transition of natural convection boundary layers revealed resonance-triggered heat transfer enhancement and controlled transition mechanisms — published in the <strong>Journal of Fluid Mechanics</strong>. As a Visiting Scholar at the University of Cambridge (SNSF scientific exchange grant), I broadened this foundation toward urban-scale flows.</p>
+      <p>Today my group combines <strong>water-tunnel PIV–LIF experiments, CFD and WRF simulations, and machine learning</strong> to understand and mitigate urban heat — from street-canyon buoyancy and tree cooling to city-scale heat island dynamics and heat-related policy.</p>
+      <p>I serve as a guest editor at <em>Building and Environment</em> and on the editorial board of <em>City and Built Environment</em>, and I am always open to multidisciplinary collaboration.</p>
+    </div>
+    <aside class="side-card">
+      <h3>// Trajectory</h3>
+      <ul class="timeline">
+        <li><div class="t-when">2022 — now</div><div class="t-what">Senior Scientist / Lecturer</div><div class="t-where">ETH Zürich, D-MAVT</div></li>
+        <li><div class="t-when">2019 — 2021</div><div class="t-what">Research Fellow / Lecturer</div><div class="t-where">ETH Zürich</div></li>
+        <li><div class="t-when">2016 — 2019</div><div class="t-what">Postdoctoral Research Associate</div><div class="t-where">University of Sydney</div></li>
+        <li><div class="t-when">PhD</div><div class="t-what">Fluid Mechanics</div><div class="t-where">University of Sydney</div></li>
+      </ul>
+      <h3 style="margin-top:24px">// Also</h3>
+      <div class="chips">
+        <span class="chip">Visiting Scholar · Cambridge</span>
+        <span class="chip">Teaching cert. · Oxford</span>
+        <span class="chip">Applied Data Science · EPFL</span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<section id="research">
+  <div class="sec-head">
+    <span class="sec-tag">02 / research</span>
+    <h2>Research</h2>
+    <p>From fundamental transition physics to machine-learning-assisted urban climate science — six threads, one goal: cooler, more livable cities.</p>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <span class="idx">R·01</span>
+      <h3>Urban heat mitigation pathways</h3>
+      <p>Prioritizing nature-based solutions and technological innovations to accelerate cooling — and aligning urban cooling strategies with global warming trends across Hong Kong, Sydney, Montreal, Zurich, and London.</p>
+      <div class="tools">trend analysis · cooling degree hours · policy</div>
+    </div>
+    <div class="card">
+      <span class="idx">R·02</span>
+      <h3>Buoyant flows in street canyons</h3>
+      <p>Quantifying how thermal buoyancy interacts with wind and canyon morphology to govern heat removal, pollutant dispersion, thermal comfort, and building energy use.</p>
+      <div class="tools">water tunnel · CFD · scaling analysis</div>
+    </div>
+    <div class="card">
+      <span class="idx">R·03</span>
+      <h3>Cooling power of urban trees</h3>
+      <p>Coupled airflow–heat–moisture–radiation simulations of vegetation in street canyons, including tree-size effects on nighttime microclimate under real heatwave conditions.</p>
+      <div class="tools">OpenFOAM · 2019 Zurich heatwave data</div>
+    </div>
+    <div class="card">
+      <span class="idx">R·04</span>
+      <h3>Machine learning for urban heat</h3>
+      <p>Validated WRF simulations combined with ML to disentangle how urban morphology, anthropogenic heat, and wind dynamics drive heat islands during heatwaves — and to map city-scale air temperature.</p>
+      <div class="tools">WRF · ML · city-scale mapping</div>
+    </div>
+    <div class="card">
+      <span class="idx">R·05</span>
+      <h3>PIV–LIF flow &amp; heat diagnostics</h3>
+      <p>Concurrent velocity–temperature field measurements with non-toxic dyes in large water tunnels — decisive progress enabling laboratory modelling of urban heat.</p>
+      <div class="tools">PIV · LIF · experimental methods</div>
+    </div>
+    <div class="card">
+      <span class="idx">R·06</span>
+      <h3>Transition of thermal boundary layers</h3>
+      <p>DNS-based stability analysis and laser diagnostics of laminar–turbulent transition in natural convection — resonance-triggered heat transfer enhancement and controlled transitions.</p>
+      <div class="tools">DNS · stability analysis · J. Fluid Mech.</div>
+    </div>
+  </div>
+</section>
+
+<section id="publications">
+  <div class="sec-head">
+    <span class="sec-tag">03 / publications</span>
+    <h2>Selected publications</h2>
+    <p>40+ peer-reviewed articles. A selection below — full list on <a href="https://scholar.google.com/citations?user=D3YrLggAAAAJ&hl=en" target="_blank" rel="noopener" style="color:var(--accent)">Google Scholar ↗</a></p>
+  </div>
+  <div class="pub-filters">
+    <button class="active" data-f="all">All</button>
+    <button data-f="urban">Urban climate</button>
+    <button data-f="fund">Fundamental flows</button>
+    <button data-f="ml">Machine learning</button>
+  </div>
+  <div id="publist">
+    <div class="pub" data-t="urban"><div class="year">2026</div><div><h3>Asymmetric global urban cooling potential demands accelerated and context-specific actions</h3><div class="meta">Ding X, Fan Y, <strong>Zhao Y</strong>, Ürge-Vorsatz D, Ge J, Carmeliet J et al. · <span class="jrnl">Nature Communications</span> 17, 4239</div></div></div>
+    <div class="pub" data-t="urban"><div class="year">2023</div><div><h3>The time-evolving impact of tree size on nighttime street canyon microclimate</h3><div class="meta"><strong>Zhao Y*</strong>, Li H, Bardhan R, Kubilay A, Li Q, Carmeliet J · <span class="jrnl">Urban Climate</span> 49, 101528</div></div></div>
+    <div class="pub" data-t="ml"><div class="year">2023</div><div><h3>Machine learning-assisted mapping of city-scale air temperature</h3><div class="meta">Ding X, <strong>Zhao Y</strong>, Fan Y, Li Y, Ge J · <span class="jrnl">Building and Environment</span> 234, 110211</div></div></div>
+    <div class="pub" data-t="urban"><div class="year">2023</div><div><h3>Urban heat dome flow deflected by the Coriolis force</h3><div class="meta">Zhang Y, Wang X, Fan Y, <strong>Zhao Y*</strong>, Carmeliet J, Ge J · <span class="jrnl">Urban Climate</span> 49, 101449</div></div></div>
+    <div class="pub" data-t="urban"><div class="year">2022</div><div><h3>Enhancement of heat removal from street canyons due to buoyant approaching flow</h3><div class="meta"><strong>Zhao Y*</strong>, Xue Y, Mei S, Chao Y, Carmeliet J · <span class="jrnl">Building and Environment</span> 226, 109757</div></div></div>
+    <div class="pub" data-t="urban"><div class="year">2022</div><div><h3>Impact of green walls on ventilation and heat removal from street canyons</h3><div class="meta">Li H, <strong>Zhao Y*</strong>, Sützl B, Kubilay A, Carmeliet J · <span class="jrnl">Building and Environment</span> 214, 108945</div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2021</div><div><h3>Natural convection over vertical and horizontal heated flat surfaces</h3><div class="meta">Fan Y*, <strong>Zhao Y*</strong>, Torres JF, Xu F, Lei C, Li Y, Carmeliet J · <span class="jrnl">Physics of Fluids</span> 33, 101301</div></div></div>
+    <div class="pub hidden" data-t="urban"><div class="year">2021</div><div><h3>Buoyancy effects on the flows around flat and steep street canyons</h3><div class="meta"><strong>Zhao Y</strong>, Li H, Kubilay A, Carmeliet J · <span class="jrnl">Science of the Total Environment</span></div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2021</div><div><h3>Magnified heat transfer from curved surfaces: A scaling prediction</h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Physics of Fluids</span> 33, 021702</div></div></div>
+    <div class="pub hidden" data-t="urban"><div class="year">2020</div><div><h3>Isothermal and non-isothermal flow in street canyons</h3><div class="meta"><strong>Zhao Y</strong>, Chew LW, Kubilay A, Carmeliet J · <span class="jrnl">Building and Environment</span> 184</div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2017</div><div><h3>The K-type and H-type transitions of natural convection boundary layers</h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Journal of Fluid Mechanics</span> 824, 352–387</div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2013</div><div><h3>Resonance of the thermal boundary layer adjacent to an isothermally heated vertical surface</h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Journal of Fluid Mechanics</span> 724, 305–336</div></div></div>
+  </div>
+  <div class="pub-more"><button class="btn btn-ghost" id="showAll" style="cursor:pointer;background:none">Show all selected ↓</button></div>
+</section>
+
+<section id="teaching">
+  <div class="sec-head">
+    <span class="sec-tag">04 / teaching</span>
+    <h2>Teaching &amp; supervision</h2>
+  </div>
+  <div class="teach-grid">
+    <div class="teach-card">
+      <span class="tag">course · ETH Zürich · since 2019</span>
+      <h3>Urban Physics — Lead Lecturer</h3>
+      <p>The state of the art in urban climate research: urban heat islands, urban wind, vegetation, thermal comfort, and climate mitigation strategies. Each semester includes hands-on workshops with laboratory tests and field measurements, plus invited speakers — including Prof. Diana Ürge-Vorsatz (2023).</p>
+    </div>
+    <div class="teach-card">
+      <span class="tag">supervision &amp; resources</span>
+      <h3>Master's theses &amp; open materials</h3>
+      <p>I supervise Master's projects on topics such as:</p>
+      <ul>
+        <li>Machine learning for urban climate and heat mitigation</li>
+        <li>Aerodynamic and thermal effects of urban vegetation</li>
+      </ul>
+      <p style="margin-top:12px">I also share PIV learning resources — code, particle images, lecture notes, and video demonstrations.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="contact-wrap">
+    <span class="sec-tag">05 / contact</span>
+    <h2>Let's collaborate</h2>
+    <p>Open to multidisciplinary research and collaboration across fluid mechanics, urban climate, heat mitigation, and data-driven approaches to sustainable cities.</p>
+    <div class="contact-links">
+      <a class="btn btn-primary" href="mailto:yozhao@ethz.ch">yozhao@ethz.ch</a>
+      <a class="btn btn-ghost" href="https://scholar.google.com/citations?user=D3YrLggAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar ↗</a>
+      <a class="btn btn-ghost" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+    <div class="addr">LEO C 2 · Leonhardstrasse 27 · 8092 Zürich · Switzerland<br>Dept. of Mechanical and Process Engineering, ETH Zürich</div>
+  </div>
+</section>
+</main>
+
+<footer>
+  © <span id="yy"></span> Yongling Zhao · yongling.info · built with care, not templates
+</footer>
+
+<script>
+document.getElementById('yy').textContent = new Date().getFullYear();
+
+// publication filters
+const filterBtns = document.querySelectorAll('.pub-filters button');
+const pubs = document.querySelectorAll('#publist .pub');
+let expanded = false;
+const VISIBLE_DEFAULT = 6;
+
+function applyFilter(f){
+  let shown = 0, hiddenMatches = 0;
+  pubs.forEach(p=>{
+    const match = f==='all' || p.dataset.t===f;
+    if(!match){ p.classList.add('hidden'); return; }
+    if(expanded || shown < VISIBLE_DEFAULT){ p.classList.remove('hidden'); shown++; }
+    else { p.classList.add('hidden'); hiddenMatches++; }
+  });
+  document.getElementById('showAll').style.display = hiddenMatches > 0 ? 'inline-flex' : 'none';
+}
+applyFilter('all');
+filterBtns.forEach(b=>b.addEventListener('click',()=>{
+  filterBtns.forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  applyFilter(b.dataset.f);
+}));
+document.getElementById('showAll').addEventListener('click',()=>{
+  expanded = true;
+  const active = document.querySelector('.pub-filters button.active').dataset.f;
+  applyFilter(active);
+});
+
+// close mobile menu on link click
+document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.nav-links').classList.remove('open')));
+</script>
+</body>
+</html>
