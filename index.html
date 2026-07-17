@@ -146,6 +146,9 @@ h2{font-size:clamp(28px,4vw,38px);font-weight:700;letter-spacing:-.02em}
 .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .card{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);padding:26px;transition:border-color .25s,transform .25s;position:relative;overflow:hidden}
 .card:hover{border-color:rgba(255,138,61,.45);transform:translateY(-3px)}
+a.card{display:block;color:inherit;text-decoration:none}
+.card .keypaper{margin-top:12px;font-family:var(--mono);font-size:11.5px;color:var(--accent);opacity:0;transition:opacity .25s}
+.card:hover .keypaper{opacity:1}
 .card .idx{font-family:var(--mono);font-size:12px;color:var(--text-3)}
 .card h3{font-size:17px;font-weight:600;margin:10px 0 10px;letter-spacing:-.01em}
 .card p{font-size:14px;color:var(--text-2)}
@@ -269,42 +272,48 @@ footer a:hover{color:var(--accent)}
     <p>From fundamental transition physics to machine-learning-assisted urban climate science — six threads, one goal: cooler, more livable cities.</p>
   </div>
   <div class="cards">
-    <div class="card">
+    <a class="card" href="https://doi.org/10.1146/annurev-environ-111523-102159" target="_blank" rel="noopener">
       <span class="idx">R·01</span>
       <h3>Urban heat mitigation pathways</h3>
       <p>Prioritizing nature-based solutions and technological innovations to accelerate cooling — and aligning urban cooling strategies with global warming trends across Hong Kong, Sydney, Montreal, Zurich, and London.</p>
       <div class="tools">trend analysis · cooling degree hours · policy</div>
-    </div>
-    <div class="card">
+      <div class="keypaper">read the key paper ↗</div>
+    </a>
+    <a class="card" href="https://scholar.google.com/scholar?q=%22Enhancement%20of%20heat%20removal%20from%20street%20canyons%20due%20to%20buoyant%20approaching%20flow%22" target="_blank" rel="noopener">
       <span class="idx">R·02</span>
       <h3>Buoyant flows in street canyons</h3>
       <p>Quantifying how thermal buoyancy interacts with wind and canyon morphology to govern heat removal, pollutant dispersion, thermal comfort, and building energy use.</p>
       <div class="tools">water tunnel · CFD · scaling analysis</div>
-    </div>
-    <div class="card">
+      <div class="keypaper">read the key paper ↗</div>
+    </a>
+    <a class="card" href="https://doi.org/10.1038/s43247-024-01908-4" target="_blank" rel="noopener">
       <span class="idx">R·03</span>
       <h3>Cooling power of urban trees</h3>
       <p>Coupled airflow–heat–moisture–radiation simulations of vegetation in street canyons, including tree-size effects on nighttime microclimate under real heatwave conditions.</p>
       <div class="tools">OpenFOAM · 2019 Zurich heatwave data</div>
-    </div>
-    <div class="card">
+      <div class="keypaper">read the key paper ↗</div>
+    </a>
+    <a class="card" href="https://scholar.google.com/scholar?q=%22Machine%20learning-assisted%20mapping%20of%20city-scale%20air%20temperature%22" target="_blank" rel="noopener">
       <span class="idx">R·04</span>
       <h3>Machine learning for urban heat</h3>
       <p>Validated WRF simulations combined with ML to disentangle how urban morphology, anthropogenic heat, and wind dynamics drive heat islands during heatwaves — and to map city-scale air temperature.</p>
       <div class="tools">WRF · ML · city-scale mapping</div>
-    </div>
-    <div class="card">
+      <div class="keypaper">read the key paper ↗</div>
+    </a>
+    <a class="card" href="https://doi.org/10.1098/rsta.2024.0573" target="_blank" rel="noopener">
       <span class="idx">R·05</span>
       <h3>PIV–LIF flow &amp; heat diagnostics</h3>
       <p>Concurrent velocity–temperature field measurements with non-toxic dyes in large water tunnels — decisive progress enabling laboratory modelling of urban heat.</p>
       <div class="tools">PIV · LIF · experimental methods</div>
-    </div>
-    <div class="card">
+      <div class="keypaper">read the key paper ↗</div>
+    </a>
+    <a class="card" href="https://scholar.google.com/scholar?q=%22The%20K-type%20and%20H-type%20transitions%20of%20natural%20convection%20boundary%20layers%22" target="_blank" rel="noopener">
       <span class="idx">R·06</span>
       <h3>Transition of thermal boundary layers</h3>
       <p>DNS-based stability analysis and laser diagnostics of laminar–turbulent transition in natural convection — resonance-triggered heat transfer enhancement and controlled transitions.</p>
       <div class="tools">DNS · stability analysis · J. Fluid Mech.</div>
-    </div>
+      <div class="keypaper">read the key paper ↗</div>
+    </a>
   </div>
 </section>
 
@@ -316,23 +325,31 @@ footer a:hover{color:var(--accent)}
   </div>
   <div class="pub-filters">
     <button class="active" data-f="all">All</button>
-    <button data-f="urban">Urban climate</button>
-    <button data-f="fund">Fundamental flows</button>
-    <button data-f="ml">Machine learning</button>
+    <button data-f="climate">Urban Climate</button>
+    <button data-f="mitigation">Urban Heat Mitigation</button>
+    <button data-f="fund">Fundamental Flows</button>
   </div>
   <div id="publist">
-    <div class="pub" data-t="urban"><div class="year">2026</div><div><h3><a href="https://doi.org/10.1038/s41467-026-70662-2" target="_blank" rel="noopener">Asymmetric global urban cooling potential demands accelerated and context-specific actions</a></h3><div class="meta">Ding X, Fan Y, <strong>Zhao Y</strong>, Ürge-Vorsatz D, Ge J, Carmeliet J et al. · <span class="jrnl">Nature Communications</span> 17, 4239</div></div></div>
-    <div class="pub" data-t="urban"><div class="year">2023</div><div><h3><a href="https://scholar.google.com/scholar?q=%22The%20time-evolving%20impact%20of%20tree%20size%20on%20nighttime%20street%20canyon%20microclimate%22" target="_blank" rel="noopener">The time-evolving impact of tree size on nighttime street canyon microclimate</a></h3><div class="meta"><strong>Zhao Y*</strong>, Li H, Bardhan R, Kubilay A, Li Q, Carmeliet J · <span class="jrnl">Urban Climate</span> 49, 101528</div></div></div>
-    <div class="pub" data-t="ml"><div class="year">2023</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Machine%20learning-assisted%20mapping%20of%20city-scale%20air%20temperature%22" target="_blank" rel="noopener">Machine learning-assisted mapping of city-scale air temperature</a></h3><div class="meta">Ding X, <strong>Zhao Y</strong>, Fan Y, Li Y, Ge J · <span class="jrnl">Building and Environment</span> 234, 110211</div></div></div>
-    <div class="pub" data-t="urban"><div class="year">2023</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Urban%20heat%20dome%20flow%20deflected%20by%20the%20Coriolis%20force%22" target="_blank" rel="noopener">Urban heat dome flow deflected by the Coriolis force</a></h3><div class="meta">Zhang Y, Wang X, Fan Y, <strong>Zhao Y*</strong>, Carmeliet J, Ge J · <span class="jrnl">Urban Climate</span> 49, 101449</div></div></div>
-    <div class="pub" data-t="urban"><div class="year">2022</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Enhancement%20of%20heat%20removal%20from%20street%20canyons%20due%20to%20buoyant%20approaching%20flow%22" target="_blank" rel="noopener">Enhancement of heat removal from street canyons due to buoyant approaching flow</a></h3><div class="meta"><strong>Zhao Y*</strong>, Xue Y, Mei S, Chao Y, Carmeliet J · <span class="jrnl">Building and Environment</span> 226, 109757</div></div></div>
-    <div class="pub" data-t="urban"><div class="year">2022</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Impact%20of%20green%20walls%20on%20ventilation%20and%20heat%20removal%20from%20street%20canyons%22" target="_blank" rel="noopener">Impact of green walls on ventilation and heat removal from street canyons</a></h3><div class="meta">Li H, <strong>Zhao Y*</strong>, Sützl B, Kubilay A, Carmeliet J · <span class="jrnl">Building and Environment</span> 214, 108945</div></div></div>
-    <div class="pub hidden" data-t="fund"><div class="year">2021</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Natural%20convection%20over%20vertical%20and%20horizontal%20heated%20flat%20surfaces%22" target="_blank" rel="noopener">Natural convection over vertical and horizontal heated flat surfaces</a></h3><div class="meta">Fan Y*, <strong>Zhao Y*</strong>, Torres JF, Xu F, Lei C, Li Y, Carmeliet J · <span class="jrnl">Physics of Fluids</span> 33, 101301</div></div></div>
-    <div class="pub hidden" data-t="urban"><div class="year">2021</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Buoyancy%20effects%20on%20the%20flows%20around%20flat%20and%20steep%20street%20canyons%22" target="_blank" rel="noopener">Buoyancy effects on the flows around flat and steep street canyons</a></h3><div class="meta"><strong>Zhao Y</strong>, Li H, Kubilay A, Carmeliet J · <span class="jrnl">Science of the Total Environment</span></div></div></div>
-    <div class="pub hidden" data-t="fund"><div class="year">2021</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Magnified%20heat%20transfer%20from%20curved%20surfaces%3A%20A%20scaling%20prediction%22" target="_blank" rel="noopener">Magnified heat transfer from curved surfaces: A scaling prediction</a></h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Physics of Fluids</span> 33, 021702</div></div></div>
-    <div class="pub hidden" data-t="urban"><div class="year">2020</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Isothermal%20and%20non-isothermal%20flow%20in%20street%20canyons%22" target="_blank" rel="noopener">Isothermal and non-isothermal flow in street canyons</a></h3><div class="meta"><strong>Zhao Y</strong>, Chew LW, Kubilay A, Carmeliet J · <span class="jrnl">Building and Environment</span> 184</div></div></div>
-    <div class="pub hidden" data-t="fund"><div class="year">2017</div><div><h3><a href="https://scholar.google.com/scholar?q=%22The%20K-type%20and%20H-type%20transitions%20of%20natural%20convection%20boundary%20layers%22" target="_blank" rel="noopener">The K-type and H-type transitions of natural convection boundary layers</a></h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Journal of Fluid Mechanics</span> 824, 352–387</div></div></div>
-    <div class="pub hidden" data-t="fund"><div class="year">2013</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Resonance%20of%20the%20thermal%20boundary%20layer%20adjacent%20to%20an%20isothermally%20heated%20vertical%20surface%22" target="_blank" rel="noopener">Resonance of the thermal boundary layer adjacent to an isothermally heated vertical surface</a></h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Journal of Fluid Mechanics</span> 724, 305–336</div></div></div>
+    <div class="pub" data-t="mitigation"><div class="year">2026</div><div><h3><a href="https://doi.org/10.1038/s41467-026-70662-2" target="_blank" rel="noopener">Asymmetric global urban cooling potential demands accelerated and context-specific actions</a></h3><div class="meta">Ding X, Fan Y, <strong>Zhao Y</strong>, Ürge-Vorsatz D, Ge J, Carmeliet J · <span class="jrnl">Nature Communications</span></div></div></div>
+    <div class="pub" data-t="mitigation"><div class="year">2026</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Nonlinear%20impacts%20of%20urban%20size%20and%20vegetation%20cover%20on%20global%20surface%20urban%20heat%22" target="_blank" rel="noopener">Nonlinear impacts of urban size and vegetation cover on global surface urban heat: insights from 6022 cities</a></h3><div class="meta">Jiang S, <strong>Zhao Y</strong>, Zhao L, Strebel D, Derome D, Ürge-Vorsatz D et al. · <span class="jrnl">Remote Sensing of Environment</span></div></div></div>
+    <div class="pub" data-t="mitigation"><div class="year">2025</div><div><h3><a href="https://doi.org/10.1146/annurev-environ-111523-102159" target="_blank" rel="noopener">Prioritizing nature-based solutions and technological innovations to accelerate urban heat mitigation pathways</a></h3><div class="meta"><strong>Zhao Y*</strong>, Carmeliet J, Hamdi R, Yuan C, Ding X, Derome D et al. · <span class="jrnl">Annual Review of Environment and Resources</span></div></div></div>
+    <div class="pub" data-t="mitigation"><div class="year">2025</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Global%20warming%20likely%20compromises%20the%20annual%20performance%20of%20zero-energy%20buildings%22" target="_blank" rel="noopener">Global warming likely compromises the annual performance of zero-energy buildings while the urban heat island effect exacerbates the impact</a></h3><div class="meta">Zhao Y, Ding X, Fan Y, <strong>Zhao Y*</strong>, Ge J, Carmeliet J · <span class="jrnl">Sustainable Cities and Society</span></div></div></div>
+    <div class="pub" data-t="mitigation"><div class="year">2024</div><div><h3><a href="https://doi.org/10.1038/s43247-024-01908-4" target="_blank" rel="noopener">Cooling efficacy of trees across cities is determined by background climate, urban morphology, and tree traits</a></h3><div class="meta">Li H, <strong>Zhao Y</strong>, Wang C, Ürge-Vorsatz D, Carmeliet J, Bardhan R · <span class="jrnl">Communications Earth &amp; Environment</span></div></div></div>
+    <div class="pub" data-t="mitigation"><div class="year">2023</div><div><h3><a href="https://scholar.google.com/scholar?q=%22The%20time-evolving%20impact%20of%20tree%20size%20on%20nighttime%20street%20canyon%20microclimate%22" target="_blank" rel="noopener">The time-evolving impact of tree size on nighttime street canyon microclimate</a></h3><div class="meta"><strong>Zhao Y*</strong>, Li H, Bardhan R, Kubilay A, Li Q, Carmeliet J · <span class="jrnl">Urban Climate</span></div></div></div>
+    <div class="pub hidden" data-t="mitigation"><div class="year">2022</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Impact%20of%20green%20walls%20on%20ventilation%20and%20heat%20removal%20from%20street%20canyons%22" target="_blank" rel="noopener">Impact of green walls on ventilation and heat removal from street canyons</a></h3><div class="meta">Li H, <strong>Zhao Y*</strong>, Sützl B, Kubilay A, Carmeliet J · <span class="jrnl">Building and Environment</span></div></div></div>
+    <div class="pub hidden" data-t="climate"><div class="year">2026</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Buoyant%20flow%20in%20simplified%202D%20street%20canyons%22" target="_blank" rel="noopener">Buoyant flow in simplified 2D street canyons: the fluctuating nature revealed by LES and PIV/LIF measurements</a></h3><div class="meta">Xue Y, <strong>Zhao Y</strong>, Duke D, Kubilay A, Chao Y, Carmeliet J · <span class="jrnl">International Journal of Heat and Mass Transfer</span></div></div></div>
+    <div class="pub hidden" data-t="climate"><div class="year">2025</div><div><h3><a href="https://doi.org/10.1098/rsta.2024.0573" target="_blank" rel="noopener">Heat and flow dynamics in cities: an experimental comparative study across diverse urban morphologies</a></h3><div class="meta">Xue Y, <strong>Zhao Y</strong>, Wai KM, Yuan C, Carmeliet J · <span class="jrnl">Philosophical Transactions of the Royal Society A</span></div></div></div>
+    <div class="pub hidden" data-t="climate"><div class="year">2025</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Urban%20heat%20above%20and%20below%20ground%3A%20towards%20improved%20understanding%22" target="_blank" rel="noopener">Urban heat above and below ground: towards improved understanding, modelling, mitigation and adaptation</a></h3><div class="meta">Rotta Loria AF, Carmeliet J, <strong>Zhao Y*</strong> · <span class="jrnl">Philosophical Transactions of the Royal Society A</span></div></div></div>
+    <div class="pub hidden" data-t="climate"><div class="year">2025</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Ultrafine-resolution%20Urban%20Climate%20modeling%3A%20Resolving%20processes%20across%20scales%22" target="_blank" rel="noopener">Ultrafine-resolution urban climate modelling: resolving processes across scales</a></h3><div class="meta">Wang C, <strong>Zhao Y</strong>, Li Q, Wang ZH, Fan J · <span class="jrnl">Journal of Advances in Modeling Earth Systems</span></div></div></div>
+    <div class="pub hidden" data-t="climate"><div class="year">2024</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Using%20clustering%20to%20understand%20intra-city%20warming%20in%20heatwaves%22" target="_blank" rel="noopener">Using clustering to understand intra-city warming in heatwaves: insights into Paris, Montreal, and Zurich</a></h3><div class="meta"><strong>Zhao Y*</strong>, Strebel D, Derome D, Esau I, Li Q, Carmeliet J · <span class="jrnl">Environmental Research Letters</span></div></div></div>
+    <div class="pub hidden" data-t="climate"><div class="year">2023</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Machine%20learning-assisted%20mapping%20of%20city-scale%20air%20temperature%22" target="_blank" rel="noopener">Machine learning-assisted mapping of city-scale air temperature</a></h3><div class="meta">Ding X, <strong>Zhao Y</strong>, Fan Y, Li Y, Ge J · <span class="jrnl">Building and Environment</span></div></div></div>
+    <div class="pub hidden" data-t="climate"><div class="year">2022</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Enhancement%20of%20heat%20removal%20from%20street%20canyons%20due%20to%20buoyant%20approaching%20flow%22" target="_blank" rel="noopener">Enhancement of heat removal from street canyons due to buoyant approaching flow</a></h3><div class="meta"><strong>Zhao Y*</strong>, Xue Y, Mei S, Chao Y, Carmeliet J · <span class="jrnl">Building and Environment</span></div></div></div>
+    <div class="pub hidden" data-t="climate"><div class="year">2021</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Buoyancy%20effects%20on%20the%20flows%20around%20flat%20and%20steep%20street%20canyons%22" target="_blank" rel="noopener">Buoyancy effects on the flows around flat and steep street canyons in simplified urban settings</a></h3><div class="meta"><strong>Zhao Y*</strong>, Li H, Kubilay A, Carmeliet J · <span class="jrnl">Science of the Total Environment</span></div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2026</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Convective%20flows%20on%20a%20heated%20horizontal%20plate%22" target="_blank" rel="noopener">Convective flows on a heated horizontal plate</a></h3><div class="meta">Jiang Y, Mucignat C, <strong>Zhao Y</strong>, Lunati I, Carmeliet J, Xu F · <span class="jrnl">Physics of Fluids</span></div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2021</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Natural%20convection%20over%20vertical%20and%20horizontal%20heated%20flat%20surfaces%3A%20a%20review%22" target="_blank" rel="noopener">Natural convection over vertical and horizontal heated flat surfaces</a></h3><div class="meta">Fan Y*, <strong>Zhao Y*</strong>, Torres JF, Xu F, Lei C, Li Y, Carmeliet J · <span class="jrnl">Physics of Fluids</span></div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2021</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Magnified%20heat%20transfer%20from%20curved%20surfaces%3A%20A%20scaling%20prediction%22" target="_blank" rel="noopener">Magnified heat transfer from curved surfaces: a scaling prediction</a></h3><div class="meta"><strong>Zhao Y*</strong>, Lei C, Patterson J · <span class="jrnl">Physics of Fluids</span></div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2017</div><div><h3><a href="https://scholar.google.com/scholar?q=%22The%20K-type%20and%20H-type%20transitions%20of%20natural%20convection%20boundary%20layers%22" target="_blank" rel="noopener">The K-type and H-type transitions of natural convection boundary layers</a></h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Journal of Fluid Mechanics</span></div></div></div>
+    <div class="pub hidden" data-t="fund"><div class="year">2013</div><div><h3><a href="https://scholar.google.com/scholar?q=%22Resonance%20of%20the%20thermal%20boundary%20layer%20adjacent%20to%20an%20isothermally%20heated%20vertical%20surface%22" target="_blank" rel="noopener">Resonance of the thermal boundary layer adjacent to an isothermally heated vertical surface</a></h3><div class="meta"><strong>Zhao Y</strong>, Lei C, Patterson J · <span class="jrnl">Journal of Fluid Mechanics</span></div></div></div>
   </div>
   <div class="pub-more"><button class="btn btn-ghost" id="showAll" style="cursor:pointer;background:none">Show all selected ↓</button></div>
 </section>

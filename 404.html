@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Page not found — Yongling Zhao</title>
+<meta name="robots" content="noindex">
+<script>
+  // Catch old-style page paths on the new domain too (e.g. /about → /#about).
+  var map = {
+    '/about': '/#about',
+    '/research': '/#research',
+    '/publication': '/#publications',
+    '/publications': '/#publications',
+    '/teaching': '/#teaching',
+    '/contact': '/#contact',
+    '/gallery': '/gallery.html'
+  };
+  var p = location.pathname.replace(/\/+$/, '').toLowerCase() || '/';
+  if (map[p]) location.replace(map[p]);
+</script>
+<style>body{font-family:system-ui,sans-serif;background:#0a0e14;color:#e6edf5;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center}a{color:#ff8a3d}.mono{font-family:ui-monospace,monospace;color:#64748b;font-size:14px;margin-top:8px}</style>
+</head>
+<body>
+<div>
+  <h1>404</h1>
+  <p>That page doesn't exist — head back to <a href="/">yonglingzhao.com</a>.</p>
+  <p class="mono">urban heat · fluid physics · cooler cities</p>
+</div>
+</body>
+</html>
