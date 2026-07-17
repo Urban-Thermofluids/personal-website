@@ -116,6 +116,9 @@ h1 .grad{background:linear-gradient(92deg,#ff8a3d 0%,#ffb86b 45%,#4cc9f0 100%);-
 .stat .num.topic{font-size:19px;line-height:1.35;color:var(--accent-2)}
 .stat .num em{color:var(--accent);font-style:normal}
 .stat .lbl{font-size:12.5px;color:var(--text-3);margin-top:4px;letter-spacing:.02em}
+a.stat-link{text-decoration:none;display:block;transition:background .2s}
+a.stat-link:hover{background:rgba(255,138,61,.07)}
+a.stat-link:hover .num{color:var(--accent)}
 
 /* ---------- sections ---------- */
 section{max-width:1080px;margin:0 auto;padding:88px 24px}
@@ -214,6 +217,7 @@ footer a:hover{color:var(--accent)}
       <li><a href="#research">Research</a></li>
       <li><a href="#publications">Publications</a></li>
       <li><a href="#teaching">Teaching</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
       <li><a href="#contact" class="cta">→ Contact</a></li>
     </ul>
   </div>
@@ -231,7 +235,7 @@ footer a:hover{color:var(--accent)}
     <div class="stat"><div class="num topic">Urban Overheating</div><div class="lbl">Heat islands, heatwaves &amp; city cooling demand</div></div>
     <div class="stat"><div class="num topic">Urban Ventilation</div><div class="lbl">Street-canyon flows, heat removal &amp; dispersion</div></div>
     <div class="stat"><div class="num topic">Urban Vegetation</div><div class="lbl">How trees &amp; green walls cool cities</div></div>
-    <div class="stat"><div class="num">6,022 <em>cities</em></div><div class="lbl">Global insights on urban heat &amp; vegetation</div></div>
+    <a class="stat stat-link" href="gallery.html"><div class="num topic">Gallery <em>→</em></div><div class="lbl">Figures from my publications — and what each reveals</div></a>
   </div>
 </header>
 
