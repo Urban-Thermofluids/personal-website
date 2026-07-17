@@ -148,6 +148,8 @@ h2{font-size:clamp(28px,4vw,38px);font-weight:700;letter-spacing:-.02em}
 .card:hover{border-color:rgba(255,138,61,.45);transform:translateY(-3px)}
 a.card{display:block;color:inherit;text-decoration:none}
 .card .keypaper{margin-top:12px;font-family:var(--mono);font-size:11.5px;color:var(--accent);opacity:0;transition:opacity .25s}
+.research-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:18px}
+@media(max-width:860px){.research-strip{grid-template-columns:1fr}}
 .card:hover .keypaper{opacity:1}
 .card .idx{font-family:var(--mono);font-size:12px;color:var(--text-3)}
 .card h3{font-size:17px;font-weight:600;margin:10px 0 10px;letter-spacing:-.01em}
@@ -280,51 +282,59 @@ footer a:hover{color:var(--accent)}
   <div class="sec-head">
     <span class="sec-tag">02 / research</span>
     <h2>Research</h2>
-    <p>From fundamental transition physics to machine-learning-assisted urban climate science — six threads, one goal: cooler, more livable cities.</p>
+    <p>Six studies that anchor my research — from accelerating urban heat mitigation to the fundamental physics of buoyant flows.</p>
   </div>
   <div class="cards">
     <a class="card" href="https://doi.org/10.1146/annurev-environ-111523-102159" target="_blank" rel="noopener">
       <span class="idx">R·01</span>
       <h3>Urban heat mitigation pathways</h3>
-      <p>Prioritizing nature-based solutions and technological innovations to accelerate cooling — and aligning urban cooling strategies with global warming trends across Hong Kong, Sydney, Montreal, Zurich, and London.</p>
-      <div class="tools">trend analysis · cooling degree hours · policy</div>
-      <div class="keypaper">read the key paper ↗</div>
+      <p>Prioritizing nature-based solutions and technological innovations to accelerate urban heat mitigation — a roadmap for how cities can cool faster in a warming world.</p>
+      <div class="tools">Annual Review of Environment &amp; Resources · 2025</div>
+      <div class="keypaper">read the paper ↗</div>
     </a>
-    <a class="card" href="https://scholar.google.com/scholar?q=%22Enhancement%20of%20heat%20removal%20from%20street%20canyons%20due%20to%20buoyant%20approaching%20flow%22" target="_blank" rel="noopener">
+    <a class="card" href="https://doi.org/10.1038/s41467-026-70662-2" target="_blank" rel="noopener">
       <span class="idx">R·02</span>
-      <h3>Buoyant flows in street canyons</h3>
-      <p>Quantifying how thermal buoyancy interacts with wind and canyon morphology to govern heat removal, pollutant dispersion, thermal comfort, and building energy use.</p>
-      <div class="tools">water tunnel · CFD · scaling analysis</div>
-      <div class="keypaper">read the key paper ↗</div>
+      <h3>Global cooling potential of cities</h3>
+      <p>How much cooling can the world's cities actually achieve? A global assessment reveals deep asymmetries between heat burden and cooling potential — demanding accelerated, context-specific action.</p>
+      <div class="tools">Nature Communications · 2026</div>
+      <div class="keypaper">read the paper ↗</div>
     </a>
-    <a class="card" href="https://doi.org/10.1038/s43247-024-01908-4" target="_blank" rel="noopener">
+    <a class="card" href="https://scholar.google.com/scholar?q=%22Beating%20urban%20heat%3A%20multimeasure-centric%20solution%20sets%20and%20a%20complementary%20framework%20for%20decision-making%22" target="_blank" rel="noopener">
       <span class="idx">R·03</span>
-      <h3>Cooling power of urban trees</h3>
-      <p>Coupled airflow–heat–moisture–radiation simulations of vegetation in street canyons, including tree-size effects on nighttime microclimate under real heatwave conditions.</p>
-      <div class="tools">OpenFOAM · 2019 Zurich heatwave data</div>
-      <div class="keypaper">read the key paper ↗</div>
+      <h3>Beating urban heat</h3>
+      <p>Multimeasure-centric solution sets and a complementary framework for decision-making — connecting individual cooling measures into coherent strategies for real cities.</p>
+      <div class="tools">Renewable &amp; Sustainable Energy Reviews · 2023</div>
+      <div class="keypaper">read the paper ↗</div>
     </a>
-    <a class="card" href="https://scholar.google.com/scholar?q=%22Machine%20learning-assisted%20mapping%20of%20city-scale%20air%20temperature%22" target="_blank" rel="noopener">
+    <a class="card" href="https://scholar.google.com/scholar?q=%22Using%20clustering%20to%20understand%20intra-city%20warming%20in%20heatwaves%3A%20insights%20into%20Paris%2C%20Montreal%2C%20and%20Zurich%22" target="_blank" rel="noopener">
       <span class="idx">R·04</span>
-      <h3>Machine learning for urban heat</h3>
-      <p>Validated WRF simulations combined with ML to disentangle how urban morphology, anthropogenic heat, and wind dynamics drive heat islands during heatwaves — and to map city-scale air temperature.</p>
-      <div class="tools">WRF · ML · city-scale mapping</div>
-      <div class="keypaper">read the key paper ↗</div>
+      <h3>Intra-city warming in heatwaves</h3>
+      <p>Clustering reveals that heatwaves do not warm a city evenly — neighbourhoods heat differently, with insights drawn from Paris, Montreal, and Zurich.</p>
+      <div class="tools">Environmental Research Letters · 2024</div>
+      <div class="keypaper">read the paper ↗</div>
     </a>
-    <a class="card" href="https://doi.org/10.1098/rsta.2024.0573" target="_blank" rel="noopener">
+    <a class="card" href="https://scholar.google.com/scholar?q=%22Relating%20three-decade%20surge%20in%20space%20cooling%20demand%20to%20urban%20warming%22" target="_blank" rel="noopener">
       <span class="idx">R·05</span>
-      <h3>PIV–LIF flow &amp; heat diagnostics</h3>
-      <p>Concurrent velocity–temperature field measurements with non-toxic dyes in large water tunnels — decisive progress enabling laboratory modelling of urban heat.</p>
-      <div class="tools">PIV · LIF · experimental methods</div>
-      <div class="keypaper">read the key paper ↗</div>
+      <h3>Urban warming &amp; cooling demand</h3>
+      <p>Three decades of surging space-cooling demand, traced back to urban warming — quantifying how hotter cities lock in ever-growing energy use.</p>
+      <div class="tools">Environmental Research Letters · 2023</div>
+      <div class="keypaper">read the paper ↗</div>
     </a>
     <a class="card" href="https://scholar.google.com/scholar?q=%22The%20K-type%20and%20H-type%20transitions%20of%20natural%20convection%20boundary%20layers%22" target="_blank" rel="noopener">
       <span class="idx">R·06</span>
       <h3>Transition of thermal boundary layers</h3>
-      <p>DNS-based stability analysis and laser diagnostics of laminar–turbulent transition in natural convection — resonance-triggered heat transfer enhancement and controlled transitions.</p>
-      <div class="tools">DNS · stability analysis · J. Fluid Mech.</div>
-      <div class="keypaper">read the key paper ↗</div>
+      <p>How natural convection boundary layers transition to turbulence — the K-type and H-type routes, revealed through controlled perturbations.</p>
+      <div class="tools">Journal of Fluid Mechanics · 2017</div>
+      <div class="keypaper">read the paper ↗</div>
     </a>
+  </div>
+
+  <div class="rg-head"><span class="sec-tag" style="margin-top:56px">research gallery</span></div>
+  <div class="research-strip">
+    <div class="teach-shot"><img src="figures/research-pivlif.jpg" alt="Researcher setting up PIV cameras beside the water tunnel with fluorescent dye" loading="lazy"><div class="cap">Setting up simultaneous PIV–LIF measurements at the water tunnel</div></div>
+    <div class="teach-shot"><img src="figures/research-lasersheet.jpg" alt="A green laser sheet illuminating model buildings in the dark fluid tunnel" loading="lazy"><div class="cap">A laser sheet cuts across a model city — capturing flow over urban blocks</div></div>
+    <div class="teach-shot"><img src="figures/research-greenwalls.jpg" alt="Green wall models in the tunnel test section and a real green facade" loading="lazy"><div class="cap">Green walls, twice: tunnel-scale models and the real facade they stand for</div></div>
+    <div class="teach-shot"><img src="figures/research-paris-cfd.jpg" alt="CFD simulation of wind flow over a real urban district geometry" loading="lazy"><div class="cap">From city geometry to wind field — simulating flow over a real district</div></div>
   </div>
 </section>
 
