@@ -172,6 +172,18 @@ a.card{display:block;color:inherit;text-decoration:none}
 .hidden{display:none}
 
 /* teaching */
+.guest-feature{display:grid;grid-template-columns:1.25fr 1fr;gap:0;border:1px solid var(--line);border-radius:16px;background:var(--bg-2);overflow:hidden;margin-bottom:22px}
+.guest-feature img{width:100%;height:100%;object-fit:cover;display:block;min-height:280px}
+.guest-feature .gf-text{padding:30px 32px;display:flex;flex-direction:column;justify-content:center}
+.guest-feature .tag{font-family:var(--mono);font-size:12px;color:var(--accent);margin-bottom:12px;display:block}
+.guest-feature h3{font-size:20px;font-weight:700;margin-bottom:12px;letter-spacing:-.01em}
+.guest-feature p{font-size:14.5px;color:var(--text-2)}
+.teach-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+.teach-shot{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);overflow:hidden}
+.teach-shot img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.teach-shot .cap{padding:12px 16px;font-family:var(--mono);font-size:11.5px;color:var(--text-3)}
+@media(max-width:860px){.guest-feature{grid-template-columns:1fr}.teach-strip{grid-template-columns:1fr}}
+
 .teach-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .teach-card{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);padding:28px}
 .teach-card h3{font-size:18px;font-weight:600;margin-bottom:10px}
@@ -359,6 +371,22 @@ footer a:hover{color:var(--accent)}
     <span class="sec-tag">04 / teaching</span>
     <h2>Teaching &amp; supervision</h2>
   </div>
+
+  <div class="guest-feature">
+    <img src="figures/teaching-diana-lecture.jpg" alt="Prof. Diana Ürge-Vorsatz delivering a guest lecture in the Urban Physics course at ETH Zürich" loading="lazy">
+    <div class="gf-text">
+      <span class="tag">guest lecture · urban physics · ETH Zürich</span>
+      <h3>Prof. Diana Ürge-Vorsatz on cities in a changing climate</h3>
+      <p>A highlight of the Urban Physics course: an invited guest lecture by Prof. Diana Ürge-Vorsatz (Central European University), one of the world's leading voices on climate change mitigation and cities. What began as a lecture-hall visit has grown into an ongoing collaboration — we have since co-authored work in <em>Nature Communications</em>, the <em>Annual Review of Environment and Resources</em>, and <em>Remote Sensing of Environment</em>.</p>
+    </div>
+  </div>
+
+  <div class="teach-strip">
+    <div class="teach-shot"><img src="figures/teaching-class.jpg" alt="Urban Physics students in class at ETH Zürich" loading="lazy"><div class="cap">Urban Physics — in the classroom</div></div>
+    <div class="teach-shot"><img src="figures/teaching-meteobike.jpg" alt="Students presenting their Meteo Bike field-measurement project" loading="lazy"><div class="cap">Students presenting their Meteo Bike field campaign</div></div>
+    <div class="teach-shot"><img src="figures/teaching-lecturehall.jpg" alt="Lecture on heat-wave prediction in a full lecture hall" loading="lazy"><div class="cap">Lecturing on heat waves — full house</div></div>
+  </div>
+
   <div class="teach-grid">
     <div class="teach-card">
       <span class="tag">course · ETH Zürich · since 2020</span>
