@@ -46,10 +46,10 @@ header{padding:140px 24px 20px;max-width:1080px;margin:0 auto;position:relative;
 h1{font-size:clamp(30px,4.5vw,44px);font-weight:800;letter-spacing:-.02em}
 .sub{color:var(--text-2);max-width:640px;margin-top:12px}
 
-.gallery{max-width:1080px;margin:0 auto;padding:44px 24px 90px;display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
-.fig{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);overflow:hidden;cursor:pointer;transition:border-color .25s,transform .25s}
+.gallery{max-width:1080px;margin:0 auto;padding:44px 24px 90px;columns:2;column-gap:22px}
+.fig{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);overflow:hidden;cursor:pointer;transition:border-color .25s,transform .25s;break-inside:avoid;margin-bottom:22px}
 .fig:hover{border-color:rgba(255,138,61,.45);transform:translateY(-3px)}
-.fig img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;background:var(--bg-3)}
+.fig img{display:block;width:100%;height:auto;background:#fff}
 .fig .cap{padding:18px 20px}
 .fig .cap .reveal-line{font-size:15px;font-weight:600;line-height:1.45;letter-spacing:-.01em}
 .fig .cap .src{font-family:var(--mono);font-size:11.5px;color:var(--text-3);margin-top:8px}
@@ -71,7 +71,7 @@ footer a{color:var(--text-2);text-decoration:none}
 footer a:hover{color:var(--accent)}
 
 @media(max-width:760px){
-  .gallery{grid-template-columns:1fr}
+  .gallery{columns:1}
   .nav-links{gap:16px}
   .nav-links li:nth-child(n+3){display:none}
 }
@@ -131,12 +131,46 @@ footer a:hover{color:var(--accent)}
       <div class="src">Zhao Y et al. · <em>Annual Review of Environment and Resources</em>, 2025</div>
     </figcaption>
   </figure>
-  <figure class="fig" data-full="">
-    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 500'%3E%3Crect width='800' height='500' fill='%23141c2b'/%3E%3Ctext x='400' y='235' fill='%2364748b' font-family='monospace' font-size='26' text-anchor='middle'%3EFigure placeholder 04%3C/text%3E%3Ctext x='400' y='275' fill='%23475569' font-family='monospace' font-size='16' text-anchor='middle'%3Esend Claude your figure to replace this%3C/text%3E%3C/svg%3E" alt="Placeholder figure 4">
+  <figure class="fig" data-full="figures/rottaloria2025-above-below.jpg">
+    <img src="figures/rottaloria2025-above-below.jpg" alt="Isometric infographic of urban heat spreading above and below ground through tunnels, sewers, and subsurface infrastructure" loading="lazy">
     <figcaption class="cap">
-      <span class="badge">PLACEHOLDER</span>
-      <div class="reveal-line">One-line statement of what this figure reveals goes here.</div>
-      <div class="src">Zhao Y et al. · <em>Journal name</em>, Year</div>
+      <div class="reveal-line">Urban heat doesn't stop at the street — it sinks into subways, sewers, and basements.</div>
+      <div class="src">Rotta Loria AF et al. · <em>Philosophical Transactions of the Royal Society A</em>, 2025</div>
+    </figcaption>
+  </figure>
+  <figure class="fig" data-full="figures/zhao2023-beating-heat.jpg">
+    <img src="figures/zhao2023-beating-heat.jpg" alt="3D neighbourhood illustration of urban heat mitigation measures: green roofs, reflective roofs, green walls, shading, urban forestry, and indoor cooling" loading="lazy">
+    <figcaption class="cap">
+      <div class="reveal-line">There is no single cure for urban heat — cities cool fastest when measures work as a team.</div>
+      <div class="src">Zhao Y et al. · <em>Renewable and Sustainable Energy Reviews</em>, 2023</div>
+    </figcaption>
+  </figure>
+  <figure class="fig" data-full="figures/zhao2024-heatwave-hysteresis.jpg">
+    <img src="figures/zhao2024-heatwave-hysteresis.jpg" alt="Hysteresis loops of boundary-layer height and air temperature before, during, and after heatwaves in Paris, Montreal, and Zurich" loading="lazy">
+    <figcaption class="cap">
+      <div class="reveal-line">A heatwave makes the atmosphere above a city breathe harder — rising higher by day, sinking lower by night.</div>
+      <div class="src">Zhao Y et al. · <em>Environmental Research Letters</em>, 2024</div>
+    </figcaption>
+  </figure>
+  <figure class="fig" data-full="figures/li2023-cooling-demand.jpg">
+    <img src="figures/li2023-cooling-demand.jpg" alt="Circular plots of three decades of cooling degree hours in urban and rural areas of Hong Kong, Sydney, Montreal, Zurich, and London" loading="lazy">
+    <figcaption class="cap">
+      <div class="reveal-line">Thirty years of air-conditioning bills tell one story: hotter cities need ever more cooling.</div>
+      <div class="src">Li H et al. · <em>Environmental Research Letters</em>, 2023</div>
+    </figcaption>
+  </figure>
+  <figure class="fig" data-full="figures/jiang2026-6022cities.jpg">
+    <img src="figures/jiang2026-6022cities.jpg" alt="Global maps of surface urban heat and land surface temperature across 6022 cities and climate zones" loading="lazy">
+    <figcaption class="cap">
+      <div class="reveal-line">The world's fastest-warming cities are overwhelmingly in the Global South — four for every one in the North.</div>
+      <div class="src">Jiang S et al. · <em>Remote Sensing of Environment</em>, 2026</div>
+    </figcaption>
+  </figure>
+  <figure class="fig" data-full="figures/li2022-greenwalls-canyons.jpg">
+    <img src="figures/li2022-greenwalls-canyons.jpg" alt="3D rendering of buildings clad in green walls within a model city used for wind-tunnel experiments" loading="lazy">
+    <figcaption class="cap">
+      <div class="reveal-line">Dressing buildings in green cools the street below — a model city in the wind tunnel shows how.</div>
+      <div class="src">Li H et al. · <em>Building and Environment</em>, 2022</div>
     </figcaption>
   </figure>
 </div>
