@@ -334,7 +334,9 @@ footer a:hover{color:var(--accent)}
   <div class="rg-head"><span class="sec-tag" style="margin-top:56px">research gallery</span></div>
   <div class="research-strip">
     <div class="teach-shot"><img src="figures/research-pivlif.jpg" alt="Researcher setting up PIV cameras beside the water tunnel with fluorescent dye" loading="lazy"><div class="cap">Setting up simultaneous PIV–LIF measurements at the water tunnel</div></div>
+    <div class="teach-shot"><video src="figures/research-lif2.mp4" poster="figures/research-lif2-poster.jpg" muted loop autoplay playsinline preload="metadata" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block" aria-label="Laser-induced fluorescence visualization of heat escaping street canyons"></video><div class="cap">Heat escaping street canyons — laser-induced fluorescence in the water tunnel</div></div>
     <div class="teach-shot"><img src="figures/research-lasersheet.jpg" alt="A green laser sheet illuminating model buildings in the dark fluid tunnel" loading="lazy"><div class="cap">A laser sheet cuts across a model city — capturing flow over urban blocks</div></div>
+    <div class="teach-shot"><video src="figures/research-heatdome.mp4" poster="figures/research-heatdome-poster.jpg" muted loop autoplay playsinline preload="metadata" style="width:100%;aspect-ratio:4/3;object-fit:contain;background:#fff;display:block" aria-label="Animation of boundary-layer height and surface temperature coupling over Paris"></video><div class="cap">The urban heat dome over Paris — boundary-layer height and surface temperature, coupled</div></div>
     <div class="teach-shot wide"><img src="figures/research-greenwalls.jpg" alt="Green wall models in the tunnel test section and a real green facade" loading="lazy"><div class="cap">Green walls, twice: tunnel-scale models and the real facade they stand for</div></div>
     <div class="teach-shot wide"><video src="figures/research-les-flow.mp4" poster="figures/research-les-flow-poster.jpg" muted loop autoplay playsinline preload="metadata" style="width:100%;display:block" aria-label="Large-eddy simulation of turbulent flow and heat through a building array"></video><div class="cap">Turbulence in motion — large-eddy simulation of flow and heat through a building array</div></div>
   </div>
@@ -467,13 +469,13 @@ document.getElementById('showAll').addEventListener('click',()=>{
   applyFilter(active);
 });
 
-// research gallery video: play when visible, pause when not
-const rv = document.querySelector('.research-strip video');
-if (rv) {
+// research gallery videos: play when visible, pause when not
+const rvs = document.querySelectorAll('.research-strip video');
+if (rvs.length) {
   const vio = new IntersectionObserver(es => {
-    es.forEach(e => { if (e.isIntersecting) { rv.play().catch(()=>{}); } else { rv.pause(); } });
+    es.forEach(e => { if (e.isIntersecting) { e.target.play().catch(()=>{}); } else { e.target.pause(); } });
   }, {threshold: .2});
-  vio.observe(rv);
+  rvs.forEach(v => vio.observe(v));
 }
 
 // close mobile menu on link click
