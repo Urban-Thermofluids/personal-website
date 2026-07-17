@@ -149,6 +149,8 @@ h2{font-size:clamp(28px,4vw,38px);font-weight:700;letter-spacing:-.02em}
 a.card{display:block;color:inherit;text-decoration:none}
 .card .keypaper{margin-top:12px;font-family:var(--mono);font-size:11.5px;color:var(--accent);opacity:0;transition:opacity .25s}
 .research-strip{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:18px}
+.research-strip .wide{grid-column:1/-1}
+.research-strip .wide img,.research-strip .wide video{aspect-ratio:auto;height:auto}
 @media(max-width:860px){.research-strip{grid-template-columns:1fr}}
 .card:hover .keypaper{opacity:1}
 .card .idx{font-family:var(--mono);font-size:12px;color:var(--text-3)}
@@ -333,8 +335,8 @@ footer a:hover{color:var(--accent)}
   <div class="research-strip">
     <div class="teach-shot"><img src="figures/research-pivlif.jpg" alt="Researcher setting up PIV cameras beside the water tunnel with fluorescent dye" loading="lazy"><div class="cap">Setting up simultaneous PIV–LIF measurements at the water tunnel</div></div>
     <div class="teach-shot"><img src="figures/research-lasersheet.jpg" alt="A green laser sheet illuminating model buildings in the dark fluid tunnel" loading="lazy"><div class="cap">A laser sheet cuts across a model city — capturing flow over urban blocks</div></div>
-    <div class="teach-shot"><img src="figures/research-greenwalls.jpg" alt="Green wall models in the tunnel test section and a real green facade" loading="lazy"><div class="cap">Green walls, twice: tunnel-scale models and the real facade they stand for</div></div>
-    <div class="teach-shot"><video src="figures/research-les-flow.mp4" poster="figures/research-les-flow-poster.jpg" muted loop autoplay playsinline preload="metadata" style="width:100%;aspect-ratio:1200/490;object-fit:cover;display:block" aria-label="Large-eddy simulation of turbulent flow and heat through a building array"></video><div class="cap">Turbulence in motion — large-eddy simulation of flow and heat through a building array</div></div>
+    <div class="teach-shot wide"><img src="figures/research-greenwalls.jpg" alt="Green wall models in the tunnel test section and a real green facade" loading="lazy"><div class="cap">Green walls, twice: tunnel-scale models and the real facade they stand for</div></div>
+    <div class="teach-shot wide"><video src="figures/research-les-flow.mp4" poster="figures/research-les-flow-poster.jpg" muted loop autoplay playsinline preload="metadata" style="width:100%;display:block" aria-label="Large-eddy simulation of turbulent flow and heat through a building array"></video><div class="cap">Turbulence in motion — large-eddy simulation of flow and heat through a building array</div></div>
   </div>
 </section>
 
