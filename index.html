@@ -85,7 +85,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;
 .menu-btn{display:none;background:none;border:1px solid var(--line-2);border-radius:8px;color:var(--text);padding:6px 12px;font-family:var(--mono);font-size:13px;cursor:pointer}
 
 /* ---------- hero ---------- */
-header{padding:170px 24px 100px;max-width:1080px;margin:0 auto}
+header{padding:170px 24px 100px;max-width:1080px;margin:0 auto;position:relative;z-index:5}
 #flow{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;
   mask-image:linear-gradient(180deg,black 0%,black 55%,transparent 95%);
   -webkit-mask-image:linear-gradient(180deg,black 0%,black 55%,transparent 95%)}
@@ -109,9 +109,23 @@ h1 .grad{background:linear-gradient(92deg,#ff8a3d 0%,#ffb86b 45%,#4cc9f0 100%);-
 .btn-primary:hover{background:var(--accent-2);transform:translateY(-1px)}
 .btn-ghost{border:1px solid var(--line-2);color:var(--text)}
 .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
-.hero-stats{display:flex;gap:0;margin-top:64px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:rgba(15,21,32,.6)}
-.stat{flex:1;padding:22px 24px;border-right:1px solid var(--line)}
-.stat:last-child{border-right:none}
+.hero-stats{display:flex;gap:0;margin-top:64px;border:1px solid var(--line);border-radius:14px;background:rgba(15,21,32,.6)}
+.stat{flex:1;padding:22px 24px;border-right:1px solid var(--line);position:relative;transition:background .25s;z-index:1}
+.stat:first-child{border-radius:14px 0 0 14px}
+.stat:last-child{border-right:none;border-radius:0 14px 14px 0}
+.stat:hover{background:rgba(255,138,61,.06);z-index:60}
+.stat:hover .num.topic{color:var(--accent)}
+.stat .num.topic{transition:color .25s}
+/* hover peek: related papers */
+.peek{position:absolute;left:10px;right:10px;top:calc(100% + 10px);background:var(--bg-3);border:1px solid rgba(255,138,61,.4);border-radius:12px;padding:16px 18px;opacity:0;visibility:hidden;transform:translateY(8px) scale(.98);transition:opacity .3s cubic-bezier(.2,.6,.2,1),transform .3s cubic-bezier(.2,.6,.2,1),visibility .3s;box-shadow:0 20px 46px rgba(0,0,0,.55);pointer-events:none}
+.stat:hover .peek{opacity:1;visibility:visible;transform:translateY(0) scale(1);pointer-events:auto}
+.peek::before{content:"";position:absolute;top:-6px;left:32px;width:10px;height:10px;background:var(--bg-3);border-left:1px solid rgba(255,138,61,.4);border-top:1px solid rgba(255,138,61,.4);transform:rotate(45deg)}
+.peek .ph{font-family:var(--mono);font-size:10.5px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.peek a{display:block;font-size:13px;font-weight:500;color:var(--text);text-decoration:none;padding:9px 0;border-top:1px solid var(--line);line-height:1.4;transition:color .2s}
+.peek a:first-of-type{border-top:none}
+.peek a:hover{color:var(--accent)}
+.peek a .pj{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--cool);display:block;margin-top:3px}
+@media(hover:none){.peek{display:none}}
 .stat .num{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--text)}
 .stat .num.topic{font-size:19px;line-height:1.35;color:var(--accent-2)}
 .stat .num em{color:var(--accent);font-style:normal}
@@ -185,7 +199,10 @@ a.card{display:block;color:inherit;text-decoration:none}
 .teach-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
 .teach-shot{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);overflow:hidden}
 .teach-shot img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
-.teach-shot .cap{padding:12px 16px;font-family:var(--mono);font-size:11.5px;color:var(--text-3)}
+.teach-shot .cap{padding:12px 16px;font-family:var(--mono);font-size:11.5px;color:var(--text-3);line-height:1.55}
+.teach-shot .cap a{display:inline-block;margin-top:7px;color:var(--accent);text-decoration:none;font-size:11px;transition:color .2s}
+.teach-shot .cap a:hover{color:var(--accent-2);text-decoration:underline}
+.teach-shot .cap a em{font-style:italic}
 @media(max-width:860px){.guest-feature{grid-template-columns:1fr}.teach-strip{grid-template-columns:1fr}}
 
 .teach-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
@@ -251,9 +268,24 @@ footer a:hover{color:var(--accent)}
     <a class="btn btn-ghost" href="https://scholar.google.com/citations?user=D3YrLggAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar ↗</a>
   </div>
   <div class="hero-stats">
-    <div class="stat"><div class="num topic">Urban Overheating</div><div class="lbl">Heat islands, heatwaves &amp; city cooling demand</div></div>
-    <div class="stat"><div class="num topic">Urban Ventilation</div><div class="lbl">Street-canyon flows, heat removal &amp; dispersion</div></div>
-    <div class="stat"><div class="num topic">Urban Vegetation</div><div class="lbl">How trees &amp; green walls cool cities</div></div>
+    <div class="stat"><div class="num topic">Urban Overheating</div><div class="lbl">Heat islands, heatwaves &amp; city cooling demand</div>
+      <div class="peek"><div class="ph">related papers</div>
+        <a href="https://scholar.google.com/scholar?q=%22Using%20clustering%20to%20understand%20intra-city%20warming%20in%20heatwaves%22" target="_blank" rel="noopener">Intra-city warming in heatwaves: Paris, Montreal &amp; Zurich<span class="pj">Environmental Research Letters · 2024 ↗</span></a>
+        <a href="https://scholar.google.com/scholar?q=%22Relating%20three-decade%20surge%20in%20space%20cooling%20demand%20to%20urban%20warming%22" target="_blank" rel="noopener">Relating a three-decade surge in space cooling demand to urban warming<span class="pj">Environmental Research Letters · 2023 ↗</span></a>
+      </div>
+    </div>
+    <div class="stat"><div class="num topic">Urban Ventilation</div><div class="lbl">Street-canyon flows, heat removal &amp; dispersion</div>
+      <div class="peek"><div class="ph">related papers</div>
+        <a href="https://doi.org/10.1098/rsta.2024.0573" target="_blank" rel="noopener">Heat and flow dynamics in cities across diverse urban morphologies<span class="pj">Phil. Trans. R. Soc. A · 2025 ↗</span></a>
+        <a href="https://scholar.google.com/scholar?q=%22Enhancement%20of%20heat%20removal%20from%20street%20canyons%20due%20to%20buoyant%20approaching%20flow%22" target="_blank" rel="noopener">Enhancement of heat removal from street canyons by buoyant approaching flow<span class="pj">Building and Environment · 2022 ↗</span></a>
+      </div>
+    </div>
+    <div class="stat"><div class="num topic">Urban Vegetation</div><div class="lbl">How trees &amp; green walls cool cities</div>
+      <div class="peek"><div class="ph">related papers</div>
+        <a href="https://doi.org/10.1038/s43247-024-01908-4" target="_blank" rel="noopener">Cooling efficacy of trees is set by climate, urban morphology &amp; tree traits<span class="pj">Communications Earth &amp; Environment · 2024 ↗</span></a>
+        <a href="https://scholar.google.com/scholar?q=%22Impact%20of%20green%20walls%20on%20ventilation%20and%20heat%20removal%20from%20street%20canyons%22" target="_blank" rel="noopener">Impact of green walls on ventilation and heat removal from street canyons<span class="pj">Building and Environment · 2022 ↗</span></a>
+      </div>
+    </div>
     <a class="stat stat-link" href="gallery.html"><div class="num topic">Gallery <em>→</em></div><div class="lbl">Figures from my publications — and what each reveals</div></a>
   </div>
 </header>
@@ -333,12 +365,12 @@ footer a:hover{color:var(--accent)}
 
   <div class="rg-head"><span class="sec-tag" style="margin-top:56px">research gallery</span></div>
   <div class="research-strip">
-    <div class="teach-shot"><img src="figures/research-pivlif.jpg" alt="Researcher setting up PIV cameras beside the water tunnel with fluorescent dye" loading="lazy"><div class="cap">Setting up simultaneous PIV–LIF measurements at the water tunnel</div></div>
-    <div class="teach-shot"><video src="figures/research-lif2.mp4" poster="figures/research-lif2-poster.jpg" muted loop autoplay playsinline preload="metadata" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block" aria-label="Laser-induced fluorescence visualization of heat escaping street canyons"></video><div class="cap">Heat escaping street canyons — laser-induced fluorescence in the water tunnel</div></div>
-    <div class="teach-shot"><img src="figures/research-lasersheet.jpg" alt="A green laser sheet illuminating model buildings in the dark fluid tunnel" loading="lazy"><div class="cap">A laser sheet cuts across a model city — capturing flow over urban blocks</div></div>
-    <div class="teach-shot"><video src="figures/research-heatdome.mp4" poster="figures/research-heatdome-poster.jpg" muted loop autoplay playsinline preload="metadata" style="width:100%;aspect-ratio:4/3;object-fit:contain;background:#fff;display:block" aria-label="Animation of boundary-layer height and surface temperature coupling over Paris"></video><div class="cap">The urban heat dome over Paris — boundary-layer height and surface temperature, coupled</div></div>
-    <div class="teach-shot wide"><img src="figures/research-greenwalls.jpg" alt="Green wall models in the tunnel test section and a real green facade" loading="lazy"><div class="cap">Green walls, twice: tunnel-scale models and the real facade they stand for</div></div>
-    <div class="teach-shot wide"><video src="figures/research-les-flow.mp4" poster="figures/research-les-flow-poster.jpg" muted loop autoplay playsinline preload="metadata" style="width:100%;display:block" aria-label="Large-eddy simulation of turbulent flow and heat through a building array"></video><div class="cap">Turbulence in motion — large-eddy simulation of flow and heat through a building array</div></div>
+    <div class="teach-shot"><img src="figures/research-pivlif.jpg" alt="Researcher setting up PIV cameras beside the water tunnel with fluorescent dye" loading="lazy"><div class="cap">Setting up simultaneous PIV–LIF measurements at the water tunnel — capturing velocity and temperature fields of urban flows in a single experiment<br><a href="https://doi.org/10.1098/rsta.2024.0573" target="_blank" rel="noopener">→ <em>Phil. Trans. R. Soc. A</em> · 2025 ↗</a></div></div>
+    <div class="teach-shot"><video src="figures/research-lif2.mp4" poster="figures/research-lif2-poster.jpg" muted loop autoplay playsinline preload="metadata" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block" aria-label="Laser-induced fluorescence visualization of heat escaping street canyons"></video><div class="cap">Heat escaping street canyons, made visible — laser-induced fluorescence tracks how warm air is flushed out of the urban canopy<br><a href="https://scholar.google.com/scholar?q=%22Enhancement%20of%20heat%20removal%20from%20street%20canyons%20due%20to%20buoyant%20approaching%20flow%22" target="_blank" rel="noopener">→ <em>Building and Environment</em> · 2022 ↗</a></div></div>
+    <div class="teach-shot"><video src="figures/research-heatdome.mp4" poster="figures/research-heatdome-poster.jpg" muted loop autoplay playsinline preload="metadata" style="width:100%;aspect-ratio:4/3;object-fit:contain;background:#fff;display:block" aria-label="Animation of boundary-layer height and surface temperature coupling over Paris"></video><div class="cap">The urban heat dome over Paris in a heatwave — the atmospheric boundary layer rising and falling in step with surface temperature<br><a href="https://scholar.google.com/scholar?q=%22Using%20clustering%20to%20understand%20intra-city%20warming%20in%20heatwaves%22" target="_blank" rel="noopener">→ <em>Environmental Research Letters</em> · 2024 ↗</a></div></div>
+    <div class="teach-shot"><img src="figures/research-lasersheet.jpg" alt="A green laser sheet illuminating model buildings in the dark fluid tunnel" loading="lazy"><div class="cap">A laser sheet slices across a model city in the dark — the illuminated plane where cameras capture flow over and between urban blocks<br><a href="https://scholar.google.com/scholar?q=%22Buoyant%20flow%20in%20simplified%202D%20street%20canyons%22" target="_blank" rel="noopener">→ <em>Int. J. Heat and Mass Transfer</em> · 2026 ↗</a></div></div>
+    <div class="teach-shot wide"><img src="figures/research-greenwalls.jpg" alt="Green wall models in the tunnel test section and a real green facade" loading="lazy"><div class="cap">Green walls at two scales — instrumented models in the water-tunnel test section, and the kind of full-scale living facade they help us understand<br><a href="https://scholar.google.com/scholar?q=%22Impact%20of%20green%20walls%20on%20ventilation%20and%20heat%20removal%20from%20street%20canyons%22" target="_blank" rel="noopener">→ <em>Building and Environment</em> · 2022 ↗</a></div></div>
+    <div class="teach-shot wide"><video src="figures/research-les-flow.mp4" poster="figures/research-les-flow-poster.jpg" muted loop autoplay playsinline preload="metadata" style="width:100%;display:block" aria-label="Large-eddy simulation of turbulent flow and heat through a building array"></video><div class="cap">Turbulence in motion — a large-eddy simulation resolving, eddy by eddy, how wind sweeps heat out of a building array<br><a href="https://scholar.google.com/scholar?q=%22Ultrafine-resolution%20Urban%20Climate%20modeling%3A%20Resolving%20processes%20across%20scales%22" target="_blank" rel="noopener">→ <em>J. Adv. Modeling Earth Systems</em> · 2025 ↗</a></div></div>
   </div>
 </section>
 
