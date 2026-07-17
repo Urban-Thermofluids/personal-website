@@ -125,7 +125,14 @@ h1 .grad{background:linear-gradient(92deg,#ff8a3d 0%,#ffb86b 45%,#4cc9f0 100%);-
 .peek a:first-of-type{border-top:none}
 .peek a:hover{color:var(--accent)}
 .peek a .pj{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--cool);display:block;margin-top:3px}
-@media(hover:none){.peek{display:none}}
+.tap-hint{display:none}
+@media(hover:none){
+  .peek{display:none;position:static;opacity:1;visibility:visible;transform:none;pointer-events:auto;margin-top:14px;box-shadow:none}
+  .peek::before{display:none}
+  .stat.open .peek{display:block}
+  .tap-hint{display:inline-block;font-family:var(--mono);font-size:10.5px;color:var(--accent);margin-top:10px;letter-spacing:.04em}
+  .stat.open .tap-hint .arr{display:inline-block;transform:rotate(180deg)}
+}
 .stat .num{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--text)}
 .stat .num.topic{font-size:19px;line-height:1.35;color:var(--accent-2)}
 .stat .num em{color:var(--accent);font-style:normal}
@@ -273,18 +280,21 @@ footer a:hover{color:var(--accent)}
   </div>
   <div class="hero-stats">
     <div class="stat"><div class="num topic">Urban Overheating</div><div class="lbl">Heat islands, heatwaves &amp; city cooling demand</div>
+      <div class="tap-hint">related papers <span class="arr">▾</span></div>
       <div class="peek"><div class="ph">related papers</div>
         <a href="https://scholar.google.com/scholar?q=%22Using%20clustering%20to%20understand%20intra-city%20warming%20in%20heatwaves%22" target="_blank" rel="noopener">Intra-city warming in heatwaves: Paris, Montreal &amp; Zurich<span class="pj">Environmental Research Letters · 2024 ↗</span></a>
         <a href="https://scholar.google.com/scholar?q=%22Relating%20three-decade%20surge%20in%20space%20cooling%20demand%20to%20urban%20warming%22" target="_blank" rel="noopener">Relating a three-decade surge in space cooling demand to urban warming<span class="pj">Environmental Research Letters · 2023 ↗</span></a>
       </div>
     </div>
     <div class="stat"><div class="num topic">Urban Ventilation</div><div class="lbl">Street-canyon flows, heat removal &amp; dispersion</div>
+      <div class="tap-hint">related papers <span class="arr">▾</span></div>
       <div class="peek"><div class="ph">related papers</div>
         <a href="https://doi.org/10.1098/rsta.2024.0573" target="_blank" rel="noopener">Heat and flow dynamics in cities across diverse urban morphologies<span class="pj">Phil. Trans. R. Soc. A · 2025 ↗</span></a>
         <a href="https://scholar.google.com/scholar?q=%22Enhancement%20of%20heat%20removal%20from%20street%20canyons%20due%20to%20buoyant%20approaching%20flow%22" target="_blank" rel="noopener">Enhancement of heat removal from street canyons by buoyant approaching flow<span class="pj">Building and Environment · 2022 ↗</span></a>
       </div>
     </div>
     <div class="stat"><div class="num topic">Urban Vegetation</div><div class="lbl">How trees &amp; green walls cool cities</div>
+      <div class="tap-hint">related papers <span class="arr">▾</span></div>
       <div class="peek"><div class="ph">related papers</div>
         <a href="https://doi.org/10.1038/s43247-024-01908-4" target="_blank" rel="noopener">Cooling efficacy of trees is set by climate, urban morphology &amp; tree traits<span class="pj">Communications Earth &amp; Environment · 2024 ↗</span></a>
         <a href="https://scholar.google.com/scholar?q=%22Impact%20of%20green%20walls%20on%20ventilation%20and%20heat%20removal%20from%20street%20canyons%22" target="_blank" rel="noopener">Impact of green walls on ventilation and heat removal from street canyons<span class="pj">Building and Environment · 2022 ↗</span></a>
@@ -506,6 +516,19 @@ document.getElementById('showAll').addEventListener('click',()=>{
 });
 
 // research gallery videos: play when visible, pause when not
+// tap-to-expand "related papers" on touch devices (hover unavailable)
+const peekStats = document.querySelectorAll('.hero-stats .stat');
+peekStats.forEach(s => {
+  if (!s.querySelector('.peek')) return;
+  s.addEventListener('click', e => {
+    if (!window.matchMedia('(hover: none)').matches) return;
+    if (e.target.closest('.peek a')) return; // let paper links navigate
+    const wasOpen = s.classList.contains('open');
+    peekStats.forEach(x => x.classList.remove('open'));
+    if (!wasOpen) s.classList.add('open');
+  });
+});
+
 const rvs = document.querySelectorAll('.research-strip video');
 if (rvs.length) {
   const vio = new IntersectionObserver(es => {
