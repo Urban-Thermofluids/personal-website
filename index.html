@@ -334,7 +334,7 @@ footer a:hover{color:var(--accent)}
     <div class="teach-shot"><img src="figures/research-pivlif.jpg" alt="Researcher setting up PIV cameras beside the water tunnel with fluorescent dye" loading="lazy"><div class="cap">Setting up simultaneous PIV–LIF measurements at the water tunnel</div></div>
     <div class="teach-shot"><img src="figures/research-lasersheet.jpg" alt="A green laser sheet illuminating model buildings in the dark fluid tunnel" loading="lazy"><div class="cap">A laser sheet cuts across a model city — capturing flow over urban blocks</div></div>
     <div class="teach-shot"><img src="figures/research-greenwalls.jpg" alt="Green wall models in the tunnel test section and a real green facade" loading="lazy"><div class="cap">Green walls, twice: tunnel-scale models and the real facade they stand for</div></div>
-    <div class="teach-shot"><img src="figures/research-paris-cfd.jpg" alt="CFD simulation of wind flow over a real urban district geometry" loading="lazy"><div class="cap">From city geometry to wind field — simulating flow over a real district</div></div>
+    <div class="teach-shot"><video src="figures/research-les-flow.mp4" poster="figures/research-les-flow-poster.jpg" muted loop autoplay playsinline preload="metadata" style="width:100%;aspect-ratio:1200/490;object-fit:cover;display:block" aria-label="Large-eddy simulation of turbulent flow and heat through a building array"></video><div class="cap">Turbulence in motion — large-eddy simulation of flow and heat through a building array</div></div>
   </div>
 </section>
 
@@ -464,6 +464,15 @@ document.getElementById('showAll').addEventListener('click',()=>{
   const active = document.querySelector('.pub-filters button.active').dataset.f;
   applyFilter(active);
 });
+
+// research gallery video: play when visible, pause when not
+const rv = document.querySelector('.research-strip video');
+if (rv) {
+  const vio = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) { rv.play().catch(()=>{}); } else { rv.pause(); } });
+  }, {threshold: .2});
+  vio.observe(rv);
+}
 
 // close mobile menu on link click
 document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>document.querySelector('.nav-links').classList.remove('open')));
