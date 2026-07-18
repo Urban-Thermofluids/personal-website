@@ -937,7 +937,7 @@ if(!reduced){
     if(y>floorY-0.12*H) s += sun*(trees?0.4:1.0);       // sun-heated street floor
     if(x>bx2-0.06*W) s += sun*(greenwall?0.12:0.9);     // SUNLIT right facade (green wall cools it)
     if(x<bx1+0.06*W) s += sun*0.28;                     // shaded left facade (cooler)
-    if(trees){ const d=Math.hypot((x-cx)/(cw*0.34),(y-(roofY+0.42*ch))/(0.16*H)); if(d<1) s -= 0.55*(1-d); }
+    if(trees){ const d=Math.hypot((x-cx)/(cw*0.42),(y-(floorY-0.32*ch))/(0.22*H)); if(d<1) s -= 0.55*(1-d); }
     return Math.max(-0.3, Math.min(1,s));
   }
   function heatColor(h){
@@ -994,10 +994,16 @@ if(!reduced){
       ctx.fillStyle=g; ctx.fillRect(bx2-12,roofY,12,floorY-roofY);
     }
     if(trees){
-      for(const fx of [cx-0.10*W, cx+0.10*W]){
-        ctx.fillStyle='rgba(120,160,120,.5)'; ctx.fillRect(fx-1.5,roofY+0.46*ch,3,0.30*ch);
-        ctx.fillStyle='rgba(126,226,168,.9)';
-        ctx.beginPath(); ctx.arc(fx,roofY+0.46*ch,13,0,6.283); ctx.fill();
+      for(const fx of [cx-0.11*W, cx+0.11*W]){
+        const topY = floorY - 0.36*ch;                 // canopy centre
+        // trunk rooted at the street, rising to the canopy
+        ctx.fillStyle='rgba(122,138,120,.6)';
+        ctx.fillRect(fx-2, topY, 4, floorY-topY);
+        // fuller canopy: cluster of leaf circles
+        ctx.fillStyle='rgba(126,226,168,.92)';
+        for(const [ox,oy,r] of [[0,0,12],[-9,4,9],[9,4,9],[0,-8,9]]){
+          ctx.beginPath(); ctx.arc(fx+ox, topY+oy, r, 0, 6.283); ctx.fill();
+        }
       }
     }
   }
