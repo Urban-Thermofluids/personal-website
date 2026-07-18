@@ -40,6 +40,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;
 .nav-links a{color:var(--text-2);text-decoration:none;font-size:14px;font-weight:500;transition:color .2s}
 .nav-links a:hover{color:var(--accent)}
 .nav-links a.active{color:var(--accent)}
+.nav-links a.cta{color:var(--accent);font-family:var(--mono);font-size:13px}
+.menu-btn{display:none;background:none;border:1px solid var(--line-2);border-radius:8px;color:var(--text);padding:6px 12px;font-family:var(--mono);font-size:13px;cursor:pointer}
 
 header{padding:140px 24px 20px;max-width:1080px;margin:0 auto;position:relative;z-index:1}
 .sec-tag{font-family:var(--mono);font-size:13px;color:var(--accent);margin-bottom:10px;display:block}
@@ -72,8 +74,12 @@ footer a:hover{color:var(--accent)}
 
 @media(max-width:760px){
   .gallery{columns:1}
-  .nav-links{gap:16px}
-  .nav-links li:nth-child(n+3){display:none}
+}
+@media(max-width:860px){
+  .nav-links{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;gap:0;background:rgba(10,14,20,.97);border-bottom:1px solid var(--line);padding:8px 0}
+  .nav-links.open{display:flex}
+  .nav-links li{padding:12px 24px}
+  .menu-btn{display:block}
 }
 </style>
 </head>
@@ -83,11 +89,14 @@ footer a:hover{color:var(--accent)}
 <nav>
   <div class="nav-inner">
     <a class="logo" href="index.html">yonglingzhao<span>.</span>com</a>
+    <button class="menu-btn" onclick="document.querySelector('.nav-links').classList.toggle('open')">menu</button>
     <ul class="nav-links">
       <li><a href="index.html#about">About</a></li>
       <li><a href="index.html#research">Research</a></li>
       <li><a href="index.html#publications">Publications</a></li>
+      <li><a href="index.html#teaching">Teaching</a></li>
       <li><a href="gallery.html" class="active">Gallery</a></li>
+      <li><a href="index.html#contact" class="cta">→ Contact</a></li>
     </ul>
   </div>
 </nav>
