@@ -1086,7 +1086,26 @@ if(!reduced){
       hl.addColorStop(0,'rgba(176,236,196,.30)'); hl.addColorStop(1,'rgba(176,236,196,0)');
       ctx.fillStyle=hl; ctx.fillRect(x0,roofY,w*0.55,floorY-roofY);
     }
-    if(trees){ for(const t of TD) drawTree(t.fx, t.cy, t.R); }
+    if(trees){
+      // cast shade on the sun-heated street (sun fixed upper-left → shadow falls down-right), scales with sun
+      const sh=solarUI;
+      if(sh>0.02){
+        ctx.save();
+        ctx.beginPath(); ctx.rect(bx1, floorY-0.2*H, cw, 0.2*H); ctx.clip();  // keep shadows on the street
+        for(const t of TD){
+          const hgt=floorY-t.cy, sxp=t.fx+hgt*0.5, rw=t.R*1.7, rh=Math.max(5,0.045*H);
+          ctx.save(); ctx.translate(sxp, floorY-1); ctx.scale(1, rh/rw);
+          const g=ctx.createRadialGradient(0,0,0,0,0,rw);
+          g.addColorStop(0,'rgba(6,11,18,'+(0.55*sh).toFixed(3)+')');
+          g.addColorStop(0.6,'rgba(6,11,18,'+(0.28*sh).toFixed(3)+')');
+          g.addColorStop(1,'rgba(6,11,18,0)');
+          ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,rw,0,6.283); ctx.fill();
+          ctx.restore();
+        }
+        ctx.restore();
+      }
+      for(const t of TD) drawTree(t.fx, t.cy, t.R);
+    }
   }
   function blob(x,y,r){ ctx.beginPath(); ctx.arc(x,y,r,0,6.283); ctx.fill(); }
   function drawTree(fx, cy, R){
