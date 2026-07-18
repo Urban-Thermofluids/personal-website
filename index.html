@@ -899,14 +899,26 @@ if(!reduced){
     W=cssW; H=cssH;
     bx1=0.30*W; bx2=0.70*W; roofY=0.34*H; floorY=0.88*H;
     cx=(bx1+bx2)/2; cyc=(roofY+floorY)/2; cw=bx2-bx1; ch=floorY-roofY;
-    computeTD();
+    computeTD(); computeGW();
   }
   // two trees of different size: {fx, R canopy radius, cy canopy centre, Ri deflection radius}
   function computeTD(){
     const mk=(fx,R)=>({fx,R,cy:floorY-(0.32*ch+R*0.55),Ri:R*1.4});
     TD=[ mk(cx-0.125*W, 0.026*W), mk(cx+0.105*W, 0.046*W) ];  // small (left), big (right)
   }
-  let windUI=0.28, solarUI=0.65, trees=false, greenwall=false, ac=false, T=0, TD=[];
+  // living-wall foliage: fixed scatter of leaf clusters on the right (sunlit) façade
+  function computeGW(){
+    const w=Math.max(12, 0.052*W), x0=bx2-w, hgt=floorY-roofY;
+    const sx=Math.max(4.5, w/3.4), sy=sx*0.82, leaves=[];
+    for(let yy=roofY+2; yy<floorY-1; yy+=sy){
+      for(let xx=x0+1.5; xx<bx2-0.5; xx+=sx){
+        leaves.push({ x: xx+(Math.random()-0.5)*sx*0.9, y: yy+(Math.random()-0.5)*sy*0.9,
+                      r: sx*(0.5+Math.random()*0.45), s: Math.random() });
+      }
+    }
+    GW={leaves, x0, w};
+  }
+  let windUI=0.28, solarUI=0.65, trees=false, greenwall=false, ac=false, T=0, TD=[], GW={leaves:[],x0:0,w:0};
   const solarMul = ()=> 0.28 + solarUI*1.12;
   document.getElementById('cy-wind').addEventListener('input', e=>{ windUI=e.target.value/100; });
   document.getElementById('cy-solar').addEventListener('input', e=>{ solarUI=e.target.value/100; });
@@ -1041,9 +1053,23 @@ if(!reduced){
   }
   function drawVeg(){
     if(greenwall){
-      const g=ctx.createLinearGradient(bx2,0,bx2-12,0);
-      g.addColorStop(0,'rgba(126,226,168,.6)'); g.addColorStop(1,'rgba(126,226,168,0)');
-      ctx.fillStyle=g; ctx.fillRect(bx2-12,roofY,12,floorY-roofY);
+      const x0=GW.x0, w=GW.w;
+      // planted substrate panel
+      ctx.fillStyle='rgba(38,80,54,.97)';
+      ctx.fillRect(x0, roofY, w, floorY-roofY);
+      // dense foliage — overlapping leaf clusters in varied greens (deterministic layout)
+      for(const g of GW.leaves){
+        ctx.fillStyle = g.s<0.34 ? 'rgba(54,116,78,.96)' : g.s<0.72 ? 'rgba(92,168,114,.95)' : 'rgba(150,220,176,.9)';
+        blob(g.x, g.y, g.r);
+      }
+      // a few trailing sprigs spilling over the canyon edge
+      ctx.strokeStyle='rgba(110,188,138,.8)'; ctx.lineWidth=1.4; ctx.lineCap='round';
+      for(let k=0;k<5;k++){ const yy=roofY+6+k*(floorY-roofY-10)/4;
+        ctx.beginPath(); ctx.moveTo(x0-1, yy); ctx.quadraticCurveTo(x0-5, yy+7, x0-2.5, yy+13); ctx.stroke(); }
+      // sunlit edge highlight (façade faces the upper-left sun)
+      const hl=ctx.createLinearGradient(x0,0,x0+w*0.55,0);
+      hl.addColorStop(0,'rgba(176,236,196,.30)'); hl.addColorStop(1,'rgba(176,236,196,0)');
+      ctx.fillStyle=hl; ctx.fillRect(x0,roofY,w*0.55,floorY-roofY);
     }
     if(trees){ for(const t of TD) drawTree(t.fx, t.cy, t.R); }
   }
