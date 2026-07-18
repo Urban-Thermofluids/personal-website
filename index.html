@@ -899,8 +899,14 @@ if(!reduced){
     W=cssW; H=cssH;
     bx1=0.30*W; bx2=0.70*W; roofY=0.34*H; floorY=0.88*H;
     cx=(bx1+bx2)/2; cyc=(roofY+floorY)/2; cw=bx2-bx1; ch=floorY-roofY;
+    computeTD();
   }
-  let windUI=0.28, solarUI=0.65, trees=false, greenwall=false, ac=false, T=0;
+  // two trees of different size: {fx, R canopy radius, cy canopy centre, Ri deflection radius}
+  function computeTD(){
+    const mk=(fx,R)=>({fx,R,cy:floorY-(0.32*ch+R*0.55),Ri:R*1.4});
+    TD=[ mk(cx-0.125*W, 0.026*W), mk(cx+0.105*W, 0.046*W) ];  // small (left), big (right)
+  }
+  let windUI=0.28, solarUI=0.65, trees=false, greenwall=false, ac=false, T=0, TD=[];
   const solarMul = ()=> 0.28 + solarUI*1.12;
   document.getElementById('cy-wind').addEventListener('input', e=>{ windUI=e.target.value/100; });
   document.getElementById('cy-solar').addEventListener('input', e=>{ solarUI=e.target.value/100; });
@@ -956,12 +962,11 @@ if(!reduced){
         vx += amp*0.5*Math.cos(ph);
       }
     }
-    // (1) flow deflects around the tree canopies (soft bluff-body repulsion)
+    // (1) flow deflects around the tree canopies (soft bluff-body repulsion, scaled by canopy size)
     if(trees){
-      const topY=floorY-0.36*ch, Ri=0.075*W;
-      for(const fx of [cx-0.11*W, cx+0.11*W]){
-        const ddx=x-fx, ddy=y-(topY-2), dd=Math.hypot(ddx,ddy);
-        if(dd<Ri){ const k=1-dd/Ri, inv=1/(dd+2); vx += ddx*inv*U*1.0*k; vy += ddy*inv*U*1.0*k; }
+      for(const t of TD){
+        const ddx=x-t.fx, ddy=y-t.cy, dd=Math.hypot(ddx,ddy);
+        if(dd<t.Ri){ const k=1-dd/t.Ri, inv=1/(dd+2); vx += ddx*inv*U*1.0*k; vy += ddy*inv*U*1.0*k; }
       }
     }
     return [vx,vy];
@@ -972,7 +977,7 @@ if(!reduced){
     if(y>floorY-0.12*H) s += sun*(trees?0.4:1.0);       // sun-heated street floor
     if(x>bx2-0.06*W) s += sun*(greenwall?0.12:0.9);     // SUNLIT right facade (green wall cools it)
     if(x<bx1+0.06*W) s += sun*0.28;                     // shaded left facade (cooler)
-    if(trees){ const d=Math.hypot((x-cx)/(cw*0.42),(y-(floorY-0.32*ch))/(0.22*H)); if(d<1) s -= 0.55*(1-d); }
+    if(trees){ for(const t of TD){ const d=Math.hypot((x-t.fx)/(t.R*2.4),(y-t.cy)/(t.R*2.0)); if(d<1) s -= 0.5*(1-d); } }
     if(ac){ const d=Math.hypot((x-(bx2-0.03*W))/(0.05*W),(y-cyc)/(0.06*H)); if(d<1) s += 0.7*(1-d); } // AC condenser dumps waste heat
     return Math.max(-0.3, Math.min(1,s));
   }
@@ -1033,19 +1038,29 @@ if(!reduced){
       g.addColorStop(0,'rgba(126,226,168,.6)'); g.addColorStop(1,'rgba(126,226,168,0)');
       ctx.fillStyle=g; ctx.fillRect(bx2-12,roofY,12,floorY-roofY);
     }
-    if(trees){
-      for(const fx of [cx-0.11*W, cx+0.11*W]){
-        const topY = floorY - 0.36*ch;                 // canopy centre
-        // trunk rooted at the street, rising to the canopy
-        ctx.fillStyle='rgba(122,138,120,.6)';
-        ctx.fillRect(fx-2, topY, 4, floorY-topY);
-        // fuller canopy: cluster of leaf circles
-        ctx.fillStyle='rgba(126,226,168,.92)';
-        for(const [ox,oy,r] of [[0,0,12],[-9,4,9],[9,4,9],[0,-8,9]]){
-          ctx.beginPath(); ctx.arc(fx+ox, topY+oy, r, 0, 6.283); ctx.fill();
-        }
-      }
-    }
+    if(trees){ for(const t of TD) drawTree(t.fx, t.cy, t.R); }
+  }
+  function blob(x,y,r){ ctx.beginPath(); ctx.arc(x,y,r,0,6.283); ctx.fill(); }
+  function drawTree(fx, cy, R){
+    // tapered trunk rooted at the street, rising into the crown
+    const tw=Math.max(2,R*0.14);
+    ctx.fillStyle='rgba(112,120,112,.72)';
+    ctx.beginPath();
+    ctx.moveTo(fx-tw, floorY);
+    ctx.quadraticCurveTo(fx-R*0.05, (floorY+cy)/2, fx-R*0.045, cy);
+    ctx.lineTo(fx+R*0.045, cy);
+    ctx.quadraticCurveTo(fx+R*0.05, (floorY+cy)/2, fx+tw, floorY);
+    ctx.closePath(); ctx.fill();
+    // organic crown: shaded base → mid tone → sunlit highlights (light from upper-left)
+    ctx.fillStyle='rgba(70,146,98,.97)';
+    for(const [ox,oy,rr] of [[0,0.18,0.98],[-0.62,0.06,0.66],[0.62,0.06,0.64],[-0.34,-0.5,0.62],[0.36,-0.46,0.56],[0,-0.66,0.58],[0,0.54,0.6]])
+      blob(fx+ox*R, cy+oy*R, rr*R*0.64);
+    ctx.fillStyle='rgba(112,206,152,.95)';
+    for(const [ox,oy,rr] of [[-0.16,-0.08,0.72],[0.22,-0.02,0.52],[-0.42,-0.16,0.42],[0.02,-0.4,0.5]])
+      blob(fx+ox*R, cy+oy*R, rr*R*0.62);
+    ctx.fillStyle='rgba(164,238,192,.92)';
+    for(const [ox,oy,rr] of [[-0.34,-0.42,0.4],[-0.06,-0.26,0.46],[0.22,-0.36,0.3]])
+      blob(fx+ox*R, cy+oy*R, rr*R*0.58);
   }
   let anomShown=5;
   function updateReadout(){
