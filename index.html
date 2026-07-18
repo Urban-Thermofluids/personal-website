@@ -90,6 +90,21 @@ header{padding:170px 24px 100px;max-width:1080px;margin:0 auto;position:relative
   mask-image:linear-gradient(180deg,black 0%,black 55%,transparent 95%);
   -webkit-mask-image:linear-gradient(180deg,black 0%,black 55%,transparent 95%)}
 
+/* ---------- scroll progress ---------- */
+#progress{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--accent),var(--cool));z-index:200;pointer-events:none}
+.nav-links a.active{color:var(--accent)}
+
+/* ---------- spotlight cards ---------- */
+@media(hover:hover){
+  .card::after,.teach-card::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(340px circle at var(--mx,50%) var(--my,50%),rgba(255,160,90,.13),transparent 65%);opacity:0;transition:opacity .3s;pointer-events:none}
+  .card:hover::after,.teach-card:hover::after{opacity:1}
+}
+
+/* ---------- hero word reveal ---------- */
+.w-in{display:inline-block;opacity:0;transform:translateY(14px);animation:wIn .55s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes wIn{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.w-in{animation:none;opacity:1;transform:none}}
+
 /* ---------- scroll reveal ---------- */
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.2,.6,.2,1),transform .7s cubic-bezier(.2,.6,.2,1)}
 .reveal.in{opacity:1;transform:none}
@@ -225,7 +240,7 @@ a.card{display:block;color:inherit;text-decoration:none}
 @media(max-width:860px){.guest-feature{grid-template-columns:1fr}.teach-strip{grid-template-columns:1fr}}
 
 .teach-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.teach-card{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);padding:28px}
+.teach-card{border:1px solid var(--line);border-radius:14px;background:var(--bg-2);padding:28px;position:relative;overflow:hidden}
 .teach-card h3{font-size:18px;font-weight:600;margin-bottom:10px}
 .teach-card .tag{font-family:var(--mono);font-size:12px;color:var(--accent);margin-bottom:12px;display:block}
 .teach-card p{font-size:14.5px;color:var(--text-2)}
@@ -264,6 +279,7 @@ footer a:hover{color:var(--accent)}
 </style>
 </head>
 <body>
+<div id="progress"></div>
 <div class="grid-bg"></div>
 <canvas id="flow" aria-hidden="true"></canvas>
 
@@ -540,6 +556,84 @@ document.getElementById('showAll').addEventListener('click',()=>{
 });
 
 // research gallery videos: play when visible, pause when not
+// scroll progress bar
+const pbar = document.getElementById('progress');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  pbar.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight) * 100) + '%';
+}, {passive:true});
+
+// scrollspy: highlight nav item of the section in view
+const navMap = {};
+document.querySelectorAll('.nav-links a').forEach(a => {
+  const m = (a.getAttribute('href') || '').match(/#(\w+)$/);
+  if (m) navMap[m[1]] = a;
+});
+const spy = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (e.isIntersecting && navMap[e.target.id]) {
+      Object.values(navMap).forEach(a => a.classList.remove('active'));
+      navMap[e.target.id].classList.add('active');
+    }
+  });
+}, {rootMargin:'-40% 0px -55% 0px'});
+['about','research','publications','teaching','contact'].forEach(id => {
+  const s = document.getElementById(id);
+  if (s) spy.observe(s);
+});
+
+// spotlight cards: glow follows the cursor (hover devices only)
+if (window.matchMedia('(hover: hover)').matches) {
+  document.querySelectorAll('.card, .teach-card').forEach(c => {
+    c.addEventListener('mousemove', e => {
+      const r = c.getBoundingClientRect();
+      c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+}
+
+// hero tagline: word-by-word entrance (once, respects reduced motion)
+(function(){
+  const g = document.querySelector('h1 .grad');
+  if (!g || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const original = g.textContent;
+  const words = original.split(' ');
+  g.innerHTML = words.map((w,i) =>
+    `<span class="w-in" style="animation-delay:${(0.12 + i*0.09).toFixed(2)}s">${w}</span>`).join(' ');
+  // animated spans escape the parent's background-clip:text, so give each word
+  // its own slice of the gradient. Inline elements paint their background as if
+  // all line fragments were laid end-to-end, so map words onto that virtual strip.
+  const grad = 'linear-gradient(92deg,#ff8a3d 0%,#ffb86b 45%,#4cc9f0 100%)';
+  const spans = [...g.children];
+  const rows = [];
+  spans.forEach(sp => {
+    const t = sp.offsetTop;
+    if (!rows.length || rows[rows.length-1].top !== t) rows.push({top:t, spans:[]});
+    rows[rows.length-1].spans.push(sp);
+  });
+  let stripW = 0;
+  const rowInfo = rows.map(r => {
+    const first = r.spans[0], last = r.spans[r.spans.length-1];
+    const info = {start: stripW, firstLeft: first.offsetLeft};
+    stripW += (last.offsetLeft + last.offsetWidth) - first.offsetLeft;
+    return info;
+  });
+  g.style.background = 'none';
+  rows.forEach((r, i) => r.spans.forEach(sp => {
+    const x = rowInfo[i].start + (sp.offsetLeft - rowInfo[i].firstLeft);
+    sp.style.backgroundImage = grad;
+    sp.style.backgroundSize = stripW + 'px 100%';
+    sp.style.backgroundPosition = (-x) + 'px 0';
+    sp.style.webkitBackgroundClip = 'text';
+    sp.style.backgroundClip = 'text';
+    sp.style.color = 'transparent';
+  }));
+  // restore the original single-element gradient once the entrance is done
+  const total = (0.12 + (words.length-1)*0.09 + 0.6) * 1000;
+  setTimeout(() => { g.style.background = ''; g.textContent = original; }, total + 150);
+})();
+
 // tap-to-expand "related papers" on touch devices (hover unavailable)
 const peekStats = document.querySelectorAll('.hero-stats .stat');
 peekStats.forEach(s => {
