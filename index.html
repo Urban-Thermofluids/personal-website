@@ -920,16 +920,21 @@ if(!reduced){
   bindToggle('cy-ac', v=>ac=v);
 
   let P=[];
+  const rndLife = ()=> 90 + ((Math.random()*220)|0);   // frames a streak lives before respawning fresh
   function spawn(fresh){
     const r=Math.random();
+    let o;
     if(!fresh && r<0.28){ // rising thermal seeded on the hot street floor
-      return {x: bx1+0.12*cw+Math.random()*0.76*cw, y: floorY-2, h: 0.5+Math.random()*0.4};
+      o={x: bx1+0.12*cw+Math.random()*0.76*cw, y: floorY-2, h: 0.5+Math.random()*0.4};
+    } else {
+      const inCanyon = !fresh && r<0.6;
+      let x,y;
+      if(inCanyon){ x=bx1+Math.random()*cw; y=roofY+Math.random()*ch; }
+      else { x=Math.random()*W*0.4; y=Math.random()*roofY; }
+      o={x,y,h: inCanyon?Math.random()*0.4:0.02};
     }
-    const inCanyon = !fresh && r<0.6;
-    let x,y;
-    if(inCanyon){ x=bx1+Math.random()*cw; y=roofY+Math.random()*ch; }
-    else { x=Math.random()*W*0.4; y=Math.random()*roofY; }
-    return {x,y,h: inCanyon?Math.random()*0.4:0.02};
+    o.life = rndLife();
+    return o;
   }
   function initP(){ const N = W<520?200:460; P=Array.from({length:N},()=>spawn(Math.random()<0.5)); }
 
@@ -1075,8 +1080,9 @@ if(!reduced){
     el.style.color=heatColor(0.5+t*0.5);
     document.getElementById('cy-vent').textContent='ventilation: '+(windUI>0.62?'strong':windUI>0.32?'moderate':'weak');
   }
+  let frame=0;
   function step(){
-    T += 0.02;
+    T += 0.02; frame++;
     // opaque scene (buildings + directional sun + greenery), fully redrawn each frame
     ctx.fillStyle='#0a0e14'; ctx.fillRect(0,0,W,H);
     drawBuildings();
@@ -1084,12 +1090,14 @@ if(!reduced){
     drawVeg();
     // airflow as fading streak-lines on the overlay — same trail style as the hero flow field
     fctx.globalCompositeOperation='destination-out';
-    fctx.fillStyle='rgba(0,0,0,0.06)';
+    fctx.fillStyle='rgba(0,0,0,0.075)';                 // trail decay (residue clears on its own)
     fctx.fillRect(0,0,W,H);
+    if(frame % 420 === 0){ fctx.fillStyle='rgba(0,0,0,0.3)'; fctx.fillRect(0,0,W,H); } // gentle periodic deep-clean
     fctx.globalCompositeOperation='source-over';
     fctx.lineWidth=1.5; fctx.lineCap='round';
     for(let i=0;i<P.length;i++){
-      const p=P[i];
+      let p=P[i];
+      if(--p.life<=0){ P[i]=p=spawn(false); }           // rolling refresh: nothing lingers in the dead zones
       const [vx,vy]=field(p.x,p.y);
       const nx=p.x+vx, ny=p.y+vy;
       const src=localSource(nx,ny);
@@ -1113,7 +1121,7 @@ if(!reduced){
   if(reduce){ for(let k=0;k<140;k++) step(); return; }
   const io=new IntersectionObserver(es=>{
     es.forEach(e=>{
-      if(e.isIntersecting && !visible){ visible=true; loop(); }
+      if(e.isIntersecting && !visible){ visible=true; fctx.clearRect(0,0,W,H); loop(); }
       else if(!e.isIntersecting && visible){ visible=false; if(raf2) cancelAnimationFrame(raf2); }
     });
   }, {threshold:0.08});
