@@ -899,21 +899,33 @@ if(!reduced){
     W=cssW; H=cssH;
     bx1=0.30*W; bx2=0.70*W; roofY=0.34*H; floorY=0.88*H;
     cx=(bx1+bx2)/2; cyc=(roofY+floorY)/2; cw=bx2-bx1; ch=floorY-roofY;
-    computeTD(); computeGW();
+    computeTD(); computeGW(); computeWIN();
+  }
+  // varied window states (fixed, so they don't flicker): mostly dim at differing brightness, a few lit warm
+  let WIN=[];
+  function computeWIN(){
+    WIN=[];
+    const push=(x,y)=>{ const r=Math.random(); WIN.push({x,y, warm:r<0.14, litAC:r<0.28, b:0.04+Math.random()*0.15,
+      w:6+Math.random()*6, h:8+Math.random()*8}); };  // varied window sizes
+    for(let yy=roofY+14; yy<floorY-8; yy+=22){
+      for(let xx=0.10*W; xx<bx1-6; xx+=20) push(xx,yy);
+      for(let xx=bx2+8; xx<0.90*W; xx+=20) push(xx,yy);
+    }
   }
   // two trees of different size: {fx, R canopy radius, cy canopy centre, Ri deflection radius}
   function computeTD(){
     const mk=(fx,R)=>({fx,R,cy:floorY-(0.32*ch+R*0.55),Ri:R*1.4});
     TD=[ mk(cx-0.125*W, 0.026*W), mk(cx+0.105*W, 0.046*W) ];  // small (left), big (right)
   }
-  // living-wall foliage: fixed scatter of leaf clusters on the right (sunlit) façade
+  // living-wall foliage: sparse scatter of leaf clusters on a narrow strip of the right (sunlit) façade
   function computeGW(){
-    const w=Math.max(12, 0.052*W), x0=bx2-w, hgt=floorY-roofY;
-    const sx=Math.max(4.5, w/3.4), sy=sx*0.82, leaves=[];
-    for(let yy=roofY+2; yy<floorY-1; yy+=sy){
-      for(let xx=x0+1.5; xx<bx2-0.5; xx+=sx){
-        leaves.push({ x: xx+(Math.random()-0.5)*sx*0.9, y: yy+(Math.random()-0.5)*sy*0.9,
-                      r: sx*(0.5+Math.random()*0.45), s: Math.random() });
+    const w=Math.max(9, 0.032*W), x0=bx2-w;
+    const sx=Math.max(5.5, w/1.9), sy=sx*1.08, leaves=[];
+    for(let yy=roofY+3; yy<floorY-2; yy+=sy){
+      for(let xx=x0+2; xx<bx2-1; xx+=sx){
+        if(Math.random()<0.34) continue;                 // sparser — leave gaps showing the substrate
+        leaves.push({ x: xx+(Math.random()-0.5)*sx*0.7, y: yy+(Math.random()-0.5)*sy*0.7,
+                      r: sx*(0.4+Math.random()*0.3), s: Math.random() });
       }
     }
     GW={leaves, x0, w};
@@ -1011,10 +1023,13 @@ if(!reduced){
     ctx.fillRect(0.06*W,roofY,bx1-0.06*W,floorY-roofY);
     ctx.fillRect(bx2,roofY,0.94*W-bx2,floorY-roofY);
     ctx.fillStyle='#0d131e'; ctx.fillRect(0,floorY,W,H-floorY);
-    ctx.fillStyle = ac ? 'rgba(76,201,240,.22)' : 'rgba(148,163,184,.10)';  // AC → cooled interiors glow cool
-    for(let yy=roofY+14; yy<floorY-8; yy+=22){
-      for(let xx=0.10*W; xx<bx1-6; xx+=20) ctx.fillRect(xx,yy,10,12);
-      for(let xx=bx2+8; xx<0.90*W; xx+=20) ctx.fillRect(xx,yy,10,12);
+    // windows: varied brightness, a few warm-lit; AC cools interiors (see computeWIN)
+    for(const wnd of WIN){
+      let col;
+      if(ac) col = wnd.litAC ? 'rgba(120,214,245,.30)' : 'rgba(76,201,240,'+(0.08+wnd.b*0.6).toFixed(3)+')';
+      else if(wnd.warm) col = 'rgba(255,196,128,'+(0.16+wnd.b).toFixed(3)+')';
+      else col = 'rgba(150,166,188,'+wnd.b.toFixed(3)+')';
+      ctx.fillStyle=col; ctx.fillRect(wnd.x, wnd.y, wnd.w, wnd.h);
     }
     if(ac){ // condenser unit on the canyon façade venting waste heat into the street
       ctx.fillStyle='#39434f'; ctx.fillRect(bx2-11, cyc-7, 11, 14);
@@ -1062,10 +1077,10 @@ if(!reduced){
         ctx.fillStyle = g.s<0.34 ? 'rgba(54,116,78,.96)' : g.s<0.72 ? 'rgba(92,168,114,.95)' : 'rgba(150,220,176,.9)';
         blob(g.x, g.y, g.r);
       }
-      // a few trailing sprigs spilling over the canyon edge
-      ctx.strokeStyle='rgba(110,188,138,.8)'; ctx.lineWidth=1.4; ctx.lineCap='round';
-      for(let k=0;k<5;k++){ const yy=roofY+6+k*(floorY-roofY-10)/4;
-        ctx.beginPath(); ctx.moveTo(x0-1, yy); ctx.quadraticCurveTo(x0-5, yy+7, x0-2.5, yy+13); ctx.stroke(); }
+      // a couple of trailing sprigs spilling over the canyon edge
+      ctx.strokeStyle='rgba(110,188,138,.75)'; ctx.lineWidth=1.3; ctx.lineCap='round';
+      for(let k=0;k<3;k++){ const yy=roofY+10+k*(floorY-roofY-16)/2;
+        ctx.beginPath(); ctx.moveTo(x0-0.5, yy); ctx.quadraticCurveTo(x0-4, yy+6, x0-2, yy+11); ctx.stroke(); }
       // sunlit edge highlight (façade faces the upper-left sun)
       const hl=ctx.createLinearGradient(x0,0,x0+w*0.55,0);
       hl.addColorStop(0,'rgba(176,236,196,.30)'); hl.addColorStop(1,'rgba(176,236,196,0)');
