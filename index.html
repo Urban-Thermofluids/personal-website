@@ -980,8 +980,10 @@ if(!reduced){
     if(!(x>bx1 && x<bx2)) return 0;
     let s=0; const sun=solarMul();
     if(y>floorY-0.12*H) s += sun*(trees?0.4:1.0);       // sun-heated street floor
-    if(x>bx2-0.06*W) s += sun*(greenwall?0.12:0.9);     // SUNLIT right facade (green wall cools it)
-    if(x<bx1+0.06*W) s += sun*0.28;                     // shaded left facade (cooler)
+    if(y>roofY){                                        // façade heating only inside the canyon cavity — NOT above the roofline
+      if(x>bx2-0.06*W) s += sun*(greenwall?0.12:0.9);   // SUNLIT right facade (green wall cools it)
+      if(x<bx1+0.06*W) s += sun*0.28;                   // shaded left facade (cooler)
+    }
     if(trees){ for(const t of TD){ const d=Math.hypot((x-t.fx)/(t.R*2.4),(y-t.cy)/(t.R*2.0)); if(d<1) s -= 0.5*(1-d); } }
     if(ac){ const d=Math.hypot((x-(bx2-0.03*W))/(0.05*W),(y-cyc)/(0.06*H)); if(d<1) s += 0.7*(1-d); } // AC condenser dumps waste heat
     return Math.max(-0.3, Math.min(1,s));
