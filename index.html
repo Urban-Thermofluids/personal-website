@@ -284,7 +284,9 @@ a.card{display:block;color:inherit;text-decoration:none}
 .cy-mod{max-width:600px;margin:6px auto 34px;text-align:left}
 .cy-lead{font-size:14.5px;color:var(--text-2);line-height:1.55;margin-bottom:14px;text-align:center}
 .cy-box{border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,#0c121c,#0a0e14);overflow:hidden;position:relative}
-.cy-box canvas{display:block;width:100%;height:auto}
+.cy-stage{position:relative}
+.cy-box #cy-cv{display:block;width:100%;height:auto}
+.cy-box #cy-flow{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .cy-cap{position:absolute;top:12px;left:14px;font-family:var(--mono);font-size:11px;color:var(--text-3);letter-spacing:.04em;pointer-events:none}
 .cy-readout{position:absolute;top:11px;right:14px;text-align:right;pointer-events:none}
 .cy-t{font-family:var(--mono);font-size:19px;font-weight:600;color:var(--accent)}
@@ -580,9 +582,12 @@ footer a:hover{color:var(--accent)}
     <div class="cy-mod">
       <div class="cy-lead">Before you write — play with a street canyon. Move the sun and wind, add greenery, and watch the air temperature respond.</div>
       <div class="cy-box" id="cy-box">
-        <canvas id="cy-cv"></canvas>
-        <div class="cy-cap">street canyon · cross-section</div>
-        <div class="cy-readout"><div class="cy-t" id="cy-temp">+5.0 °C</div><div class="cy-v" id="cy-vent">ventilation: weak</div></div>
+        <div class="cy-stage">
+          <canvas id="cy-cv"></canvas>
+          <canvas id="cy-flow"></canvas>
+          <div class="cy-cap">street canyon · cross-section</div>
+          <div class="cy-readout"><div class="cy-t" id="cy-temp">+5.0 °C</div><div class="cy-v" id="cy-vent">ventilation: weak</div></div>
+        </div>
         <div class="cy-controls">
           <div class="cy-ctl">wind <input type="range" id="cy-wind" min="0" max="100" value="28" aria-label="wind speed"></div>
           <div class="cy-ctl">sun <input type="range" id="cy-solar" min="0" max="100" value="65" aria-label="solar heating"></div>
@@ -876,6 +881,8 @@ if(!reduced){
   const cv = document.getElementById('cy-cv');
   if(!cv) return;
   const ctx = cv.getContext('2d');
+  const fl = document.getElementById('cy-flow');
+  const fctx = fl.getContext('2d');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let W,H,DPR,bx1,bx2,roofY,floorY,cx,cyc,cw,ch;
   function resize(){
@@ -885,6 +892,8 @@ if(!reduced){
     cv.style.height = cssH+'px';
     cv.width = cssW*DPR; cv.height = cssH*DPR;
     ctx.setTransform(DPR,0,0,DPR,0,0);
+    fl.width = cssW*DPR; fl.height = cssH*DPR;
+    fctx.setTransform(DPR,0,0,DPR,0,0);
     W=cssW; H=cssH;
     bx1=0.30*W; bx2=0.70*W; roofY=0.34*H; floorY=0.88*H;
     cx=(bx1+bx2)/2; cyc=(roofY+floorY)/2; cw=bx2-bx1; ch=floorY-roofY;
@@ -1020,28 +1029,37 @@ if(!reduced){
     document.getElementById('cy-vent').textContent='ventilation: '+(windUI>0.62?'strong':windUI>0.32?'moderate':'weak');
   }
   function step(){
-    ctx.fillStyle='rgba(10,14,20,0.34)'; ctx.fillRect(0,0,W,H);
+    // opaque scene (buildings + directional sun + greenery), fully redrawn each frame
+    ctx.fillStyle='#0a0e14'; ctx.fillRect(0,0,W,H);
     drawBuildings();
     drawSolar();
+    drawVeg();
+    // airflow as fading streak-lines on the overlay — same trail style as the hero flow field
+    fctx.globalCompositeOperation='destination-out';
+    fctx.fillStyle='rgba(0,0,0,0.06)';
+    fctx.fillRect(0,0,W,H);
+    fctx.globalCompositeOperation='source-over';
+    fctx.lineWidth=1.5; fctx.lineCap='round';
     for(let i=0;i<P.length;i++){
       const p=P[i];
       const [vx,vy]=field(p.x,p.y);
-      p.x+=vx; p.y+=vy;
-      const src=localSource(p.x,p.y);
+      const nx=p.x+vx, ny=p.y+vy;
+      const src=localSource(nx,ny);
       if(src>p.h) p.h += (src-p.h)*(0.17-0.09*windUI);
       else p.h -= (0.004+0.11*windUI)*(p.h+0.04);
       p.h=Math.max(0,Math.min(1,p.h));
+      fctx.strokeStyle=heatColor(p.h);
+      fctx.globalAlpha=0.26+0.4*p.h;
+      fctx.beginPath(); fctx.moveTo(p.x,p.y); fctx.lineTo(nx,ny); fctx.stroke();
+      p.x=nx; p.y=ny;
       if(p.y>roofY && (p.x<bx1||p.x>bx2)){ p.x += (p.x<cx?6:-6); }
-      if(p.x>W+8||p.x<-8||p.y<-8||p.y>H+8){ P[i]=spawn(false); continue; }
-      ctx.beginPath(); ctx.arc(p.x,p.y, p.h>0.5?1.9:1.5, 0, 6.283);
-      ctx.fillStyle=heatColor(p.h); ctx.globalAlpha=0.85; ctx.fill();
+      if(p.x>W+8||p.x<-8||p.y<-8||p.y>H+8){ P[i]=spawn(false); }
     }
-    ctx.globalAlpha=1;
-    drawVeg();
+    fctx.globalAlpha=1;
     updateReadout();
   }
-  let raf2=null, visible=false;
-  function loop(){ if(visible){ step(); raf2=requestAnimationFrame(loop); } }
+  let raf2=null, visible=false, lastT=0;
+  function loop(ts){ if(!visible) return; raf2=requestAnimationFrame(loop); if(ts && ts-lastT<1000/42) return; lastT=ts||0; step(); }
   resize(); initP();
   window.addEventListener('resize', ()=>{ resize(); initP(); });
   if(reduce){ for(let k=0;k<140;k++) step(); return; }
