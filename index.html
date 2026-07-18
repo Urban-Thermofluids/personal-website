@@ -63,8 +63,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:
 
 /* ---------- background grid ---------- */
 .grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:linear-gradient(rgba(148,163,184,.045) 1px,transparent 1px),
-  linear-gradient(90deg,rgba(148,163,184,.045) 1px,transparent 1px);
+  background-image:linear-gradient(rgba(148,163,184,.075) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(148,163,184,.075) 1px,transparent 1px);
   background-size:48px 48px;
   mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,black 30%,transparent 90%);
   -webkit-mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,black 30%,transparent 90%);
@@ -561,7 +561,7 @@ if(!reduced){
   let W, H, particles, raf;
   const DPR = Math.min(window.devicePixelRatio||1, 2);
   const isMobile = matchMedia('(max-width: 860px)').matches;
-  const N = isMobile ? 55 : 130;
+  const N = isMobile ? 70 : 160;
 
   function field(x, y, t){
     // pseudo curl-noise: layered sines → smooth, divergence-light flow
@@ -600,7 +600,7 @@ if(!reduced){
     t0 = t;
     // fade old trails
     ctx.globalCompositeOperation = 'destination-out';
-    ctx.fillStyle = 'rgba(0,0,0,0.055)';
+    ctx.fillStyle = 'rgba(0,0,0,0.045)';
     ctx.fillRect(0,0,W,H);
     ctx.globalCompositeOperation = 'source-over';
     for(const p of particles){
@@ -608,8 +608,8 @@ if(!reduced){
       const vx = Math.cos(ang)*p.speed;
       const vy = Math.sin(ang)*p.speed - (p.warm ? 0.22 : 0.02); // buoyancy for warm particles
       const nx = p.x + vx, ny = p.y + vy;
-      ctx.strokeStyle = p.warm ? 'rgba(255,138,61,0.30)' : 'rgba(76,201,240,0.22)';
-      ctx.lineWidth = 1.1;
+      ctx.strokeStyle = p.warm ? 'rgba(255,138,61,0.44)' : 'rgba(76,201,240,0.33)';
+      ctx.lineWidth = 1.4;
       ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(nx,ny); ctx.stroke();
       p.x = nx; p.y = ny;
       if(--p.life <= 0 || p.x<-8 || p.x>W+8 || p.y<-8 || p.y>H+8) spawn(p);
