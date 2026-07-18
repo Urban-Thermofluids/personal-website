@@ -170,6 +170,20 @@ a.stat-link:hover .num{color:var(--accent)}
 
 /* ---------- sections ---------- */
 section{max-width:1080px;margin:0 auto;padding:88px 24px}
+
+/* recent highlights strip */
+.highlights{position:relative;z-index:1;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(15,21,32,.45)}
+.hl-inner{max-width:1080px;margin:0 auto;padding:18px 24px;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:26px;align-items:center}
+.hl-label{font-family:var(--mono);font-size:11.5px;color:var(--accent);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+.hl{display:flex;gap:12px;align-items:baseline;text-decoration:none;color:var(--text-2);font-size:13.5px;line-height:1.5;transition:color .2s}
+.hl:hover{color:var(--text)}
+.hl:hover .hl-text{text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px}
+.hl .hl-date{font-family:var(--mono);font-size:11.5px;color:var(--accent);white-space:nowrap}
+.hl .hl-text em{color:var(--cool);font-style:italic}
+@media(max-width:900px){
+  .hl-inner{grid-template-columns:1fr;gap:12px;padding:16px 20px}
+  .hl-label{margin-bottom:2px}
+}
 .sec-head{margin-bottom:44px}
 .sec-tag{font-family:var(--mono);font-size:13px;color:var(--accent);margin-bottom:10px;display:block}
 h2{font-size:clamp(28px,4vw,38px);font-weight:700;letter-spacing:-.02em}
@@ -217,6 +231,9 @@ a.card{display:block;color:inherit;text-decoration:none}
 .pub h3{font-size:16px;font-weight:600;line-height:1.45;letter-spacing:-.01em}
 .pub h3 a{color:inherit;text-decoration:none;transition:color .2s}
 .pub h3 a:hover{color:var(--accent)}
+.cite-btn{background:none;border:1px solid var(--line-2);border-radius:999px;color:var(--text-3);font-family:var(--mono);font-size:10.5px;padding:2px 10px;margin-left:10px;cursor:pointer;transition:all .2s;vertical-align:1px}
+.cite-btn:hover{color:var(--accent);border-color:var(--accent)}
+.cite-btn.done{color:#7ee2a8;border-color:#7ee2a8}
 .pub h3 a::after{content:" ↗";font-size:12px;color:var(--text-3);font-weight:400}
 .pub .meta{font-size:13.5px;color:var(--text-3);margin-top:4px}
 .pub .meta .jrnl{color:var(--cool);font-style:italic}
@@ -343,6 +360,24 @@ footer a:hover{color:var(--accent)}
     </a>
   </div>
 </header>
+
+<div class="highlights">
+  <div class="hl-inner">
+    <span class="hl-label">recent</span>
+    <a class="hl" href="https://doi.org/10.1038/s41467-026-70662-2" target="_blank" rel="noopener">
+      <span class="hl-date">2026</span>
+      <span class="hl-text">The world's urban cooling potential is deeply uneven — in <em>Nature Communications</em> ↗</span>
+    </a>
+    <a class="hl" href="https://doi.org/10.1146/annurev-environ-111523-102159" target="_blank" rel="noopener">
+      <span class="hl-date">2025</span>
+      <span class="hl-text">A roadmap for faster urban heat mitigation — in <em>Annual Review of Environment and Resources</em> ↗</span>
+    </a>
+    <a class="hl" href="https://youtu.be/e-43Ly6OLGY" target="_blank" rel="noopener">
+      <span class="hl-date">lecture</span>
+      <span class="hl-text">IPCC Vice-Chair Diana Ürge-Vorsatz guest-lectures in Urban Physics — watch ▶</span>
+    </a>
+  </div>
+</div>
 
 <main>
 <section id="about">
@@ -553,6 +588,46 @@ document.getElementById('showAll').addEventListener('click',()=>{
   expanded = true;
   const active = document.querySelector('.pub-filters button.active').dataset.f;
   applyFilter(active);
+});
+
+// copy-citation buttons: build BibTeX from each publication entry
+document.querySelectorAll('#publist .pub').forEach(p => {
+  const year = p.querySelector('.year').textContent.trim();
+  const link = p.querySelector('h3 a');
+  const title = link.textContent.trim();
+  const journal = p.querySelector('.jrnl').textContent.trim();
+  let names = p.querySelector('.meta').textContent.split('·')[0].replace(/\*/g, '').trim();
+  const etal = /et al\.?$/.test(names);
+  names = names.replace(/,?\s*et al\.?$/, '');
+  const authors = names.split(/,\s*/).filter(Boolean).map(n => {
+    const parts = n.trim().split(/\s+/);
+    if (parts.length < 2) return n.trim();
+    const initials = parts.pop();
+    return parts.join(' ') + ', ' + initials.split('').join('. ') + '.';
+  });
+  if (etal) authors.push('others');
+  const first = (names.split(/,\s*/)[0] || 'zhao').split(/\s+/).slice(0, -1).join('').toLowerCase().normalize('NFD').replace(/[^a-z]/g, '');
+  const word = (title.toLowerCase().match(/[a-z]{4,}/) || ['paper'])[0];
+  const doi = link.href.startsWith('https://doi.org/') ? link.href.slice(16) : '';
+  const bib = '@article{' + first + year + word + ',\n' +
+    '  author  = {' + authors.join(' and ') + '},\n' +
+    '  title   = {' + title + '},\n' +
+    '  journal = {' + journal + '},\n' +
+    '  year    = {' + year + '}' +
+    (doi ? ',\n  doi     = {' + doi + '}' : '') + '\n}';
+  const btn = document.createElement('button');
+  btn.className = 'cite-btn'; btn.textContent = '⧉ cite'; btn.title = 'Copy BibTeX citation';
+  p.querySelector('.meta').appendChild(btn);
+  btn.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(bib); }
+    catch (err) {
+      const ta = document.createElement('textarea');
+      ta.value = bib; document.body.appendChild(ta); ta.select();
+      document.execCommand('copy'); ta.remove();
+    }
+    btn.textContent = 'copied ✓'; btn.classList.add('done');
+    setTimeout(() => { btn.textContent = '⧉ cite'; btn.classList.remove('done'); }, 1600);
+  });
 });
 
 // research gallery videos: play when visible, pause when not
