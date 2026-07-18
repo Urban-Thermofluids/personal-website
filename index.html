@@ -125,6 +125,18 @@ h1 .grad{background:linear-gradient(92deg,#ff8a3d 0%,#ffb86b 45%,#4cc9f0 100%);-
 .peek a:first-of-type{border-top:none}
 .peek a:hover{color:var(--accent)}
 .peek a .pj{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--cool);display:block;margin-top:3px}
+/* gallery peek: mini photo pile */
+.peek-gallery .pg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:2px}
+.peek-gallery img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:9px;border:1px solid var(--line-2);background:#fff;opacity:0;transform:translateY(12px) scale(.92) rotate(0deg);transition:opacity .35s cubic-bezier(.2,.6,.2,1),transform .35s cubic-bezier(.2,.6,.2,1)}
+.stat:hover .peek-gallery img{opacity:1;transform:translateY(0) scale(1) rotate(var(--r,0deg))}
+.peek-gallery img:nth-child(1){--r:-2.5deg;transition-delay:.03s}
+.peek-gallery img:nth-child(2){--r:1.8deg;transition-delay:.09s}
+.peek-gallery img:nth-child(3){--r:-1.5deg;transition-delay:.15s}
+.peek-gallery img:nth-child(4){--r:2.2deg;transition-delay:.21s}
+.peek-gallery img:nth-child(5){--r:-2deg;transition-delay:.27s}
+.peek-gallery img:nth-child(6){--r:1.6deg;transition-delay:.33s}
+.peek-gallery img:hover{transform:translateY(-2px) scale(1.06) rotate(0deg);border-color:var(--accent)}
+.peek-gallery .pg-more{font-family:var(--mono);font-size:11px;color:var(--accent);margin-top:12px}
 .tap-hint{display:none}
 @media(hover:none){
   .peek{display:none;position:static;opacity:1;visibility:visible;transform:none;pointer-events:auto;margin-top:14px;box-shadow:none}
@@ -300,7 +312,19 @@ footer a:hover{color:var(--accent)}
         <a href="https://scholar.google.com/scholar?q=%22Impact%20of%20green%20walls%20on%20ventilation%20and%20heat%20removal%20from%20street%20canyons%22" target="_blank" rel="noopener">Impact of green walls on ventilation and heat removal from street canyons<span class="pj">Building and Environment · 2022 ↗</span></a>
       </div>
     </div>
-    <a class="stat stat-link" href="gallery.html"><div class="num topic">Gallery <em>→</em></div><div class="lbl">Figures from my publications — and what each reveals</div></a>
+    <a class="stat stat-link" href="gallery.html"><div class="num topic">Gallery <em>→</em></div><div class="lbl">Figures from my publications — and what each reveals</div>
+      <div class="peek peek-gallery"><div class="ph">a peek inside</div>
+        <div class="pg-grid">
+          <img src="figures/thumb-zhao2025-nbs-cooling.jpg" alt="" loading="lazy">
+          <img src="figures/thumb-rottaloria2025-above-below.jpg" alt="" loading="lazy">
+          <img src="figures/thumb-zhao2023-beating-heat.jpg" alt="" loading="lazy">
+          <img src="figures/thumb-li2024-tree-cooling.jpg" alt="" loading="lazy">
+          <img src="figures/thumb-li2023-cooling-demand.jpg" alt="" loading="lazy">
+          <img src="figures/thumb-li2022-greenwalls-canyons.jpg" alt="" loading="lazy">
+        </div>
+        <div class="pg-more">browse all figures →</div>
+      </div>
+    </a>
   </div>
 </header>
 
@@ -519,7 +543,7 @@ document.getElementById('showAll').addEventListener('click',()=>{
 // tap-to-expand "related papers" on touch devices (hover unavailable)
 const peekStats = document.querySelectorAll('.hero-stats .stat');
 peekStats.forEach(s => {
-  if (!s.querySelector('.peek')) return;
+  if (!s.querySelector('.peek') || s.tagName === 'A') return; // gallery tile navigates on tap
   s.addEventListener('click', e => {
     if (!window.matchMedia('(hover: none)').matches) return;
     if (e.target.closest('.peek a')) return; // let paper links navigate
