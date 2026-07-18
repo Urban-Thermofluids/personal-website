@@ -10,13 +10,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://yonglingzhao.com/">
 <meta property="og:title" content="Yongling Zhao — Understanding urban heat, cooling cities with nature">
-<meta property="og:description" content="Senior Scientist at ETH Zürich's Chair of Building Physics. Nature-inspired urban climate solutions: fluid mechanics, heat transfer, and machine learning for cooler cities.">
+<meta property="og:description" content="Group Leader at ETH Zürich's Chair of Building Physics. Nature-inspired urban climate solutions: fluid mechanics, heat transfer, and machine learning for cooler cities.">
 <meta property="og:image" content="https://yonglingzhao.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Yongling Zhao — Understanding urban heat, cooling cities with nature">
-<meta name="twitter:description" content="Senior Scientist at ETH Zürich's Chair of Building Physics. Nature-inspired urban climate solutions: fluid mechanics, heat transfer, and machine learning for cooler cities.">
+<meta name="twitter:description" content="Group Leader at ETH Zürich's Chair of Building Physics. Nature-inspired urban climate solutions: fluid mechanics, heat transfer, and machine learning for cooler cities.">
 <meta name="twitter:image" content="https://yonglingzhao.com/og-image.png">
 <script type="application/ld+json">
 {
@@ -25,7 +25,7 @@
   "name": "Yongling Zhao",
   "honorificSuffix": "PhD",
   "url": "https://yonglingzhao.com",
-  "jobTitle": "Senior Scientist & Lecturer",
+  "jobTitle": "Group Leader & Lecturer",
   "worksFor": {
     "@type": "Organization",
     "name": "ETH Zürich",
@@ -86,6 +86,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;
 
 /* ---------- hero ---------- */
 header{padding:170px 24px 100px;max-width:1080px;margin:0 auto;position:relative;z-index:5}
+.name-row{display:flex;align-items:flex-start;gap:26px}
+.avatar{flex:0 0 96px;width:96px;height:96px;border-radius:50%;overflow:hidden;margin-top:10px;
+  background:radial-gradient(circle at 50% 35%, rgba(255,138,61,.25), transparent 70%)}
+.avatar img{width:100%;height:100%;object-fit:cover;object-position:center 32%;
+  filter:grayscale(.12) contrast(1.02);
+  -webkit-mask-image:radial-gradient(circle at 50% 42%, #000 74%, transparent 100%);
+  mask-image:radial-gradient(circle at 50% 42%, #000 74%, transparent 100%)}
+@media(max-width:640px){.name-row{flex-direction:column;gap:18px}.avatar{width:76px;height:76px;flex-basis:76px;margin-top:0}}
 #flow{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;
   mask-image:linear-gradient(180deg,black 0%,black 55%,transparent 95%);
   -webkit-mask-image:linear-gradient(180deg,black 0%,black 55%,transparent 95%)}
@@ -316,8 +324,11 @@ footer a:hover{color:var(--accent)}
 </nav>
 
 <header id="top">
-  <div class="kicker">Senior Scientist · Chair of Building Physics · ETH Zürich</div>
-  <h1>Yongling Zhao<br><span class="grad">Understanding urban heat, cooling cities with nature.</span></h1>
+  <div class="kicker">Group Leader &amp; Lecturer · Chair of Building Physics · ETH Zürich</div>
+  <div class="name-row">
+    <span class="avatar"><img src="figures/portrait.jpg" alt="Portrait of Yongling Zhao"></span>
+    <h1 style="margin:0">Yongling Zhao<br><span class="grad">Understanding urban heat, cooling cities with nature.</span></h1>
+  </div>
   <p class="hero-sub">My research is centered on two fronts: <strong>understanding urban heat</strong> — using fluid mechanics, multiscale modelling, and machine learning to reveal how heat builds up and moves through cities — and <strong>accelerating cooling solutions</strong>, prioritizing nature-based strategies and technological innovations that help cities beat the heat.</p>
   <div class="hero-actions">
     <a class="btn btn-primary" href="#research">Explore research</a>
