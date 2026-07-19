@@ -596,6 +596,7 @@ footer a:hover{color:var(--accent)}
             <span class="cy-toggle" id="cy-trees" role="button" tabindex="0">🌳 street trees</span>
             <span class="cy-toggle" id="cy-wall" role="button" tabindex="0">🧱 green wall</span>
             <span class="cy-toggle" id="cy-roof" role="button" tabindex="0">🌿 green roof</span>
+            <span class="cy-toggle cool" id="cy-mist" role="button" tabindex="0">💧 misting</span>
             <span class="cy-toggle cool" id="cy-ac" role="button" tabindex="0">❄️ indoor AC</span>
           </div>
         </div>
@@ -944,7 +945,7 @@ if(!reduced){
     }
     GW={leaves, x0, w};
   }
-  let windUI=0.28, solarUI=0.65, trees=false, greenwall=false, ac=false, roof=false, T=0, TD=[], GW={leaves:[],x0:0,w:0}, RV={clumps:[],blades:[]};
+  let windUI=0.28, solarUI=0.65, trees=false, greenwall=false, ac=false, roof=false, misting=false, T=0, TD=[], GW={leaves:[],x0:0,w:0}, RV={clumps:[],blades:[]}, MP=[];
   const solarMul = ()=> 0.28 + solarUI*1.12;
   document.getElementById('cy-wind').addEventListener('input', e=>{ windUI=e.target.value/100; });
   document.getElementById('cy-solar').addEventListener('input', e=>{ solarUI=e.target.value/100; });
@@ -956,6 +957,7 @@ if(!reduced){
   bindToggle('cy-trees', v=>trees=v);
   bindToggle('cy-wall', v=>greenwall=v);
   bindToggle('cy-roof', v=>roof=v);
+  bindToggle('cy-mist', v=>misting=v);
   bindToggle('cy-ac', v=>ac=v);
 
   let P=[];
@@ -1029,6 +1031,7 @@ if(!reduced){
     }
     if(trees){ for(const t of TD){ const d=Math.hypot((x-t.fx)/(t.R*2.4),(y-t.cy)/(t.R*2.0)); if(d<1) s -= 0.5*(1-d); } }
     if(ac){ const d=Math.hypot((x-(bx2-0.03*W))/(0.05*W),(y-cyc)/(0.06*H)); if(d<1) s += 0.7*(1-d); } // AC condenser dumps waste heat
+    if(misting) s -= 0.5;                                // evaporative cooling of the canyon air
     return Math.max(-0.3, Math.min(1,s));
   }
   function heatColor(h){
@@ -1170,6 +1173,26 @@ if(!reduced){
     for(const [ox,oy,rr] of [[-0.34,-0.42,0.4],[-0.06,-0.26,0.46],[0.22,-0.36,0.3]])
       blob(fx+ox*R, cy+oy*R, rr*R*0.58);
   }
+  function spawnMist(){
+    const left=Math.random()<0.5, nx=left?bx1+2:bx2-2, ny=cyc-0.09*H+(Math.random()-0.5)*0.06*H;
+    return {x:nx, y:ny, vx:(left?1:-1)*(0.5+Math.random()*0.7), vy:(Math.random()-0.42)*0.35, life:46+Math.random()*54, r:2+Math.random()*2.4};
+  }
+  function drawMist(){
+    if(misting){ for(let n=0;n<4 && MP.length<120;n++) MP.push(spawnMist()); }
+    if(!MP.length) return;
+    for(let i=MP.length-1;i>=0;i--){
+      const p=MP[i];
+      const [fx,fy]=field(p.x,p.y);
+      p.vx=p.vx*0.88+fx*0.42; p.vy=p.vy*0.88+fy*0.42+0.02;   // advected by the flow, drifts and settles
+      p.x+=p.vx; p.y+=p.vy; p.r+=0.2; p.life--;
+      if(p.life<=0 || p.x<bx1-6||p.x>bx2+6||p.y<roofY-6||p.y>floorY+4){ MP.splice(i,1); continue; }
+      const a=Math.min(1,p.life/46)*0.22;
+      const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+      g.addColorStop(0,'rgba(212,240,253,'+a.toFixed(3)+')'); g.addColorStop(0.5,'rgba(200,234,250,'+(a*0.5).toFixed(3)+')'); g.addColorStop(1,'rgba(200,234,250,0)');
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,6.283); ctx.fill();
+    }
+    if(misting){ ctx.fillStyle='rgba(150,170,190,.85)'; ctx.fillRect(bx1,cyc-0.10*H,3,5); ctx.fillRect(bx2-3,cyc-0.10*H,3,5); }
+  }
   let anomShown=5;
   function updateReadout(){
     const surfaceHeat=solarMul()*(trees?0.55:1)*(greenwall?0.82:1);
@@ -1177,6 +1200,7 @@ if(!reduced){
     let target=0.6+surfaceHeat*6.4/vent;
     if(ac) target += 0.5;                       // AC waste heat warms the canyon
     if(roof) target = Math.max(0.6, target-0.35); // green roof: small street-level cooling (mostly a roof-level effect)
+    if(misting) target = Math.max(0.3, target-1.7); // misting: strong local evaporative cooling
     anomShown += (target-anomShown)*0.06;
     const el=document.getElementById('cy-temp');
     el.textContent='+'+anomShown.toFixed(1)+' °C';
@@ -1192,6 +1216,7 @@ if(!reduced){
     drawBuildings();
     drawSolar();
     drawVeg();
+    drawMist();
     // airflow as fading streak-lines on the overlay — same trail style as the hero flow field
     fctx.globalCompositeOperation='destination-out';
     fctx.fillStyle='rgba(0,0,0,0.075)';                 // trail decay (residue clears on its own)
