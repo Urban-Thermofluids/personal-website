@@ -890,7 +890,7 @@ if(!reduced){
   const fl = document.getElementById('cy-flow');
   const fctx = fl.getContext('2d');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let W,H,DPR,bx1,bx2,roofY,floorY,cx,cyc,cw,ch;
+  let W,H,DPR,bx1,bx2,roofY,roofL,roofR,floorY,cx,cyc,cw,ch;
   function resize(){
     DPR = Math.min(devicePixelRatio||1,2);
     const cssW = cv.parentElement.clientWidth;
@@ -901,22 +901,25 @@ if(!reduced){
     fl.width = cssW*DPR; fl.height = cssH*DPR;
     fctx.setTransform(DPR,0,0,DPR,0,0);
     W=cssW; H=cssH;
-    bx1=0.30*W; bx2=0.70*W; roofY=0.34*H; floorY=0.88*H;
+    bx1=0.30*W; bx2=0.70*W; floorY=0.88*H;
+    roofL=0.45*H;             // shorter upstream (left) building
+    roofR=0.27*H;             // taller downstream (right) building
+    roofY=roofL;              // canyon opening / shear layer sits at the shorter roofline
     cx=(bx1+bx2)/2; cyc=(roofY+floorY)/2; cw=bx2-bx1; ch=floorY-roofY;
     computeTD(); computeGW(); computeWIN(); computeRV();
   }
   // green-roof planting: fixed carpet of low clumps + grass tufts along both rooftops
   function computeRV(){
-    const clumps=[], blades=[];
-    for(const [xa,xb] of [[0.06*W,bx1],[bx2,0.94*W]]){
+    const clumps=[], blades=[], spans=[[0.06*W,bx1,roofL],[bx2,0.94*W,roofR]];
+    for(const [xa,xb,ry] of spans){
       for(let x=xa+2; x<xb-1;){
         const r=2.3+Math.random()*3.4;
-        clumps.push({x, y: roofY-1-Math.random()*3, r, s: Math.random()});
-        if(Math.random()<0.34) blades.push({x, h:3+Math.random()*5, dx:(Math.random()-0.5)*2.4});
+        clumps.push({x, y: ry-1-Math.random()*3, r, s: Math.random()});
+        if(Math.random()<0.34) blades.push({x, ry, h:3+Math.random()*5, dx:(Math.random()-0.5)*2.4});
         x += Math.max(3.4, r*0.85);
       }
     }
-    RV={clumps, blades};
+    RV={clumps, blades, spans};
   }
   // varied window states (fixed, so they don't flicker): mostly dim at differing brightness, a few lit warm
   let WIN=[];
@@ -924,10 +927,8 @@ if(!reduced){
     WIN=[];
     const push=(x,y)=>{ const r=Math.random(); WIN.push({x,y, warm:r<0.14, litAC:r<0.28, b:0.04+Math.random()*0.15,
       w:6+Math.random()*6, h:8+Math.random()*8}); };  // varied window sizes
-    for(let yy=roofY+14; yy<floorY-8; yy+=22){
-      for(let xx=0.10*W; xx<bx1-6; xx+=20) push(xx,yy);
-      for(let xx=bx2+8; xx<0.90*W; xx+=20) push(xx,yy);
-    }
+    for(let yy=roofL+14; yy<floorY-8; yy+=22) for(let xx=0.10*W; xx<bx1-6; xx+=20) push(xx,yy);  // short left
+    for(let yy=roofR+14; yy<floorY-8; yy+=22) for(let xx=bx2+8; xx<0.90*W; xx+=20) push(xx,yy);  // tall right
   }
   // two trees of different size: {fx, R canopy radius, cy canopy centre, Ri deflection radius}
   function computeTD(){
@@ -938,7 +939,7 @@ if(!reduced){
   function computeGW(){
     const w=Math.max(9, 0.032*W), x0=bx2-w;
     const sx=Math.max(5.5, w/1.9), sy=sx*1.08, leaves=[];
-    for(let yy=roofY+3; yy<floorY-2; yy+=sy){
+    for(let yy=roofR+3; yy<floorY-2; yy+=sy){
       for(let xx=x0+2; xx<bx2-1; xx+=sx){
         if(Math.random()<0.34) continue;                 // sparser — leave gaps showing the substrate
         leaves.push({ x: xx+(Math.random()-0.5)*sx*0.7, y: yy+(Math.random()-0.5)*sy*0.7,
@@ -989,6 +990,13 @@ if(!reduced){
       const t=Math.max(0,Math.min(1,(roofY-y)/(roofY*0.9)));
       vx += U*(0.4+0.6*t);
       if(x>cx && x<bx2+0.05*W && y>roofY-0.12*H) vy += U*0.25;
+      // wind climbs and lifts over the exposed upper front of the taller downstream block
+      if(y>roofR && x>cx){
+        const prox=Math.max(0,1-Math.abs(x-bx2)/(0.15*W));
+        const climb=Math.max(0,Math.min(1,(roofL-y)/((roofL-roofR)||1)));
+        vy -= U*0.8*prox*climb;
+        vx -= U*0.5*prox*climb;
+      }
     } else if(inX){
       const dx=(x-cx)/(cw*0.5), dy=(y-cyc)/(ch*0.5);
       const r=Math.min(1,Math.hypot(dx,dy));
@@ -1021,8 +1029,9 @@ if(!reduced){
   }
   function localSource(x,y){
     // hot roofs warm the free-stream air just above them; a green roof removes this (mostly a roof-level effect)
-    if(!roof && y<roofY && y>roofY-0.16*H && ((x>0.07*W && x<bx1) || (x>bx2 && x<0.93*W))){
-      return solarMul()*0.55*((y-(roofY-0.16*H))/(0.16*H));
+    if(!roof){
+      if(x>0.07*W && x<bx1 && y<roofL && y>roofL-0.16*H) return solarMul()*0.55*((y-(roofL-0.16*H))/(0.16*H));
+      if(x>bx2 && x<0.93*W && y<roofR && y>roofR-0.16*H) return solarMul()*0.55*((y-(roofR-0.16*H))/(0.16*H));
     }
     if(!(x>bx1 && x<bx2)) return 0;
     let s=0; const sun=solarMul();
@@ -1044,8 +1053,8 @@ if(!reduced){
   }
   function drawBuildings(){
     ctx.fillStyle='#141c2b';
-    ctx.fillRect(0.06*W,roofY,bx1-0.06*W,floorY-roofY);
-    ctx.fillRect(bx2,roofY,0.94*W-bx2,floorY-roofY);
+    ctx.fillRect(0.06*W,roofL,bx1-0.06*W,floorY-roofL);   // shorter upstream (left) building
+    ctx.fillRect(bx2,roofR,0.94*W-bx2,floorY-roofR);      // taller downstream (right) building
     ctx.fillStyle='#0d131e'; ctx.fillRect(0,floorY,W,H-floorY);
     // windows: varied brightness, a few warm-lit; AC cools interiors (see computeWIN)
     for(const wnd of WIN){
@@ -1063,43 +1072,52 @@ if(!reduced){
   function drawSolar(){
     const s = solarUI;                 // 0..1 raw intensity
     const warm = a => 'rgba(255,150,70,'+Math.max(0,a).toFixed(3)+')';
-    // fixed sun angle: soft warm light from the upper-left
-    const sky=ctx.createLinearGradient(0,0,W*0.7,roofY);
+    // fixed sun angle: soft warm light from the upper-left (kept above the taller roofline)
+    const sky=ctx.createLinearGradient(0,0,W*0.7,roofR);
     sky.addColorStop(0,'rgba(255,190,110,'+(0.025+s*0.06).toFixed(3)+')');
     sky.addColorStop(1,'rgba(255,190,110,0)');
-    ctx.fillStyle=sky; ctx.fillRect(0,0,W,roofY+0.04*H);
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,roofR+0.03*H);
     // roofs (face up → lit); a green roof keeps them from heating up
     const rwf = roof ? 0.15 : 1;
-    const roofLit=(x0,w)=>{ const g=ctx.createLinearGradient(0,roofY,0,roofY+0.04*H);
+    const roofLit=(x0,ry,w)=>{ const g=ctx.createLinearGradient(0,ry,0,ry+0.04*H);
       g.addColorStop(0,warm((0.07+s*0.16)*rwf)); g.addColorStop(1,warm(0));
-      ctx.fillStyle=g; ctx.fillRect(x0,roofY,w,0.04*H); };
-    roofLit(0.06*W,bx1-0.06*W); roofLit(bx2,0.94*W-bx2);
-    // sunlit canyon façade = right building's left face (faces up-left)
+      ctx.fillStyle=g; ctx.fillRect(x0,ry,w,0.04*H); };
+    roofLit(0.06*W,roofL,bx1-0.06*W); roofLit(bx2,roofR,0.94*W-bx2);
+    // sunlit canyon façade = taller (right) building's left face, roofR→floor
     const rf=ctx.createLinearGradient(bx2,0,bx2-0.045*W,0);
     rf.addColorStop(0,warm(0.08+s*0.17)); rf.addColorStop(1,warm(0));
-    ctx.fillStyle=rf; ctx.fillRect(bx2-0.045*W,roofY,0.045*W,floorY-roofY);
-    // sunlit outer-left façade
+    ctx.fillStyle=rf; ctx.fillRect(bx2-0.045*W,roofR,0.045*W,floorY-roofR);
+    // sunlit outer-left façade (short building)
     const lo=ctx.createLinearGradient(0.06*W,0,0.06*W+0.035*W,0);
     lo.addColorStop(0,warm(0.05+s*0.11)); lo.addColorStop(1,warm(0));
-    ctx.fillStyle=lo; ctx.fillRect(0.06*W,roofY,0.035*W,floorY-roofY);
-    // shaded canyon façade = left building's right face (in shadow)
+    ctx.fillStyle=lo; ctx.fillRect(0.06*W,roofL,0.035*W,floorY-roofL);
+    // shaded canyon façade = short building's right face (in shadow)
     const sh=ctx.createLinearGradient(bx1,0,bx1-0.045*W,0);
     sh.addColorStop(0,'rgba(8,12,20,0.30)'); sh.addColorStop(1,'rgba(8,12,20,0)');
-    ctx.fillStyle=sh; ctx.fillRect(bx1-0.045*W,roofY,0.045*W,floorY-roofY);
+    ctx.fillStyle=sh; ctx.fillRect(bx1-0.045*W,roofL,0.045*W,floorY-roofL);
     // sun-heated street floor
     const grd=ctx.createLinearGradient(0,floorY-0.12*H,0,floorY);
     grd.addColorStop(0,warm(0)); grd.addColorStop(1,warm(0.08+s*0.17));
     ctx.fillStyle=grd; ctx.fillRect(bx1,floorY-0.12*H,cw,0.12*H);
+    // the upstream (short) building casts shade into the canyon (sun upper-left)
+    if(s>0.05){
+      const shLen=Math.min(0.62*cw, 0.62*(floorY-roofL));
+      const g=ctx.createLinearGradient(bx1,0,bx1+shLen,0);
+      g.addColorStop(0,'rgba(4,8,13,'+(0.4*s).toFixed(3)+')');
+      g.addColorStop(0.65,'rgba(4,8,13,'+(0.2*s).toFixed(3)+')');
+      g.addColorStop(1,'rgba(4,8,13,0)');
+      ctx.fillStyle=g; ctx.fillRect(bx1,roofL,shLen,floorY-roofL);
+    }
   }
   function drawVeg(){
     if(roof){
       // planted rooftops: soil substrate + a low vegetation carpet of clumps and grass tufts
-      for(const [xa,xb] of [[0.06*W,bx1],[bx2,0.94*W]]){
-        ctx.fillStyle='rgba(58,44,32,.92)'; ctx.fillRect(xa, roofY-1, xb-xa, 4);      // substrate
-        ctx.fillStyle='rgba(20,15,10,.45)'; ctx.fillRect(xa, roofY+3, xb-xa, 1.4);    // edge shadow
+      for(const [xa,xb,ry] of RV.spans){
+        ctx.fillStyle='rgba(58,44,32,.92)'; ctx.fillRect(xa, ry-1, xb-xa, 4);      // substrate
+        ctx.fillStyle='rgba(20,15,10,.45)'; ctx.fillRect(xa, ry+3, xb-xa, 1.4);    // edge shadow
       }
       ctx.strokeStyle='rgba(104,176,120,.7)'; ctx.lineWidth=1; ctx.lineCap='round';   // grass tufts
-      for(const bl of RV.blades){ ctx.beginPath(); ctx.moveTo(bl.x, roofY); ctx.quadraticCurveTo(bl.x+bl.dx, roofY-bl.h*0.6, bl.x+bl.dx*1.6, roofY-bl.h); ctx.stroke(); }
+      for(const bl of RV.blades){ ctx.beginPath(); ctx.moveTo(bl.x, bl.ry); ctx.quadraticCurveTo(bl.x+bl.dx, bl.ry-bl.h*0.6, bl.x+bl.dx*1.6, bl.ry-bl.h); ctx.stroke(); }
       for(const c of RV.clumps){                                                       // foliage clumps
         ctx.fillStyle = c.s<0.34?'rgba(52,112,74,.97)':c.s<0.72?'rgba(92,168,112,.96)':'rgba(150,220,176,.92)';
         blob(c.x, c.y, c.r);
@@ -1107,10 +1125,10 @@ if(!reduced){
       for(const c of RV.clumps){ if(c.s>0.55){ ctx.fillStyle='rgba(170,236,192,.5)'; blob(c.x-c.r*0.3, c.y-c.r*0.35, c.r*0.42); } }  // sunlit highlights
     }
     if(greenwall){
-      const x0=GW.x0, w=GW.w;
+      const x0=GW.x0, w=GW.w, ry=roofR;   // green wall covers the taller downstream façade
       // planted substrate panel
       ctx.fillStyle='rgba(38,80,54,.97)';
-      ctx.fillRect(x0, roofY, w, floorY-roofY);
+      ctx.fillRect(x0, ry, w, floorY-ry);
       // dense foliage — overlapping leaf clusters in varied greens (deterministic layout)
       for(const g of GW.leaves){
         ctx.fillStyle = g.s<0.34 ? 'rgba(54,116,78,.96)' : g.s<0.72 ? 'rgba(92,168,114,.95)' : 'rgba(150,220,176,.9)';
@@ -1118,12 +1136,12 @@ if(!reduced){
       }
       // a couple of trailing sprigs spilling over the canyon edge
       ctx.strokeStyle='rgba(110,188,138,.75)'; ctx.lineWidth=1.3; ctx.lineCap='round';
-      for(let k=0;k<3;k++){ const yy=roofY+10+k*(floorY-roofY-16)/2;
+      for(let k=0;k<3;k++){ const yy=ry+10+k*(floorY-ry-16)/2;
         ctx.beginPath(); ctx.moveTo(x0-0.5, yy); ctx.quadraticCurveTo(x0-4, yy+6, x0-2, yy+11); ctx.stroke(); }
       // sunlit edge highlight (façade faces the upper-left sun)
       const hl=ctx.createLinearGradient(x0,0,x0+w*0.55,0);
       hl.addColorStop(0,'rgba(176,236,196,.30)'); hl.addColorStop(1,'rgba(176,236,196,0)');
-      ctx.fillStyle=hl; ctx.fillRect(x0,roofY,w*0.55,floorY-roofY);
+      ctx.fillStyle=hl; ctx.fillRect(x0,ry,w*0.55,floorY-ry);
     }
     if(trees){
       // realistic cast shade: project the canopy silhouette onto the street along the light ray (sun upper-left)
@@ -1239,7 +1257,7 @@ if(!reduced){
       fctx.globalAlpha=0.26+0.4*p.h;
       fctx.beginPath(); fctx.moveTo(p.x,p.y); fctx.lineTo(nx,ny); fctx.stroke();
       p.x=nx; p.y=ny;
-      if(p.y>roofY && (p.x<bx1||p.x>bx2)){ p.x += (p.x<cx?6:-6); }
+      if((p.x<bx1 && p.y>roofL) || (p.x>bx2 && p.y>roofR)){ p.x += (p.x<cx?6:-6); }
       if(p.x>W+8||p.x<-8||p.y<-8||p.y>H+8){ P[i]=spawn(false); }
     }
     fctx.globalAlpha=1;
