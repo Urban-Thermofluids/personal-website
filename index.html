@@ -1087,21 +1087,28 @@ if(!reduced){
       ctx.fillStyle=hl; ctx.fillRect(x0,roofY,w*0.55,floorY-roofY);
     }
     if(trees){
-      // cast shade on the sun-heated street (sun fixed upper-left → shadow falls down-right), scales with sun
-      const sh=solarUI;
+      // realistic cast shade: project the canopy silhouette onto the street along the light ray (sun upper-left)
+      const sh=Math.min(1, solarUI*1.3);
       if(sh>0.02){
+        const k=0.72, flat=0.42;   // k = horizontal shear of the light ray; flat = ground foreshortening
+        const canopy=[[0,0.18,0.98],[-0.62,0.06,0.66],[0.62,0.06,0.64],[-0.34,-0.5,0.62],[0.36,-0.46,0.56],[0,-0.66,0.58],[0,0.54,0.6],[-0.16,-0.08,0.72],[0.22,-0.02,0.52],[-0.42,-0.16,0.42],[0.02,-0.4,0.5]];
         ctx.save();
-        ctx.beginPath(); ctx.rect(bx1, floorY-0.2*H, cw, 0.2*H); ctx.clip();  // keep shadows on the street
+        ctx.beginPath(); ctx.rect(bx1, floorY-0.13*H, cw, 0.22*H); ctx.clip();  // shadow on the street only
+        ctx.fillStyle='rgb(3,6,11)';
         for(const t of TD){
-          const hgt=floorY-t.cy, sxp=t.fx+hgt*0.5, rw=t.R*1.7, rh=Math.max(5,0.045*H);
-          ctx.save(); ctx.translate(sxp, floorY-1); ctx.scale(1, rh/rw);
-          const g=ctx.createRadialGradient(0,0,0,0,0,rw);
-          g.addColorStop(0,'rgba(6,11,18,'+(0.55*sh).toFixed(3)+')');
-          g.addColorStop(0.6,'rgba(6,11,18,'+(0.28*sh).toFixed(3)+')');
-          g.addColorStop(1,'rgba(6,11,18,0)');
-          ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,rw,0,6.283); ctx.fill();
-          ctx.restore();
+          // a grounding patch so the shade connects to the trunk base
+          ctx.globalAlpha=0.34*sh;
+          ctx.save(); ctx.translate(t.fx+t.R*0.5, floorY-1); ctx.scale(1, flat);
+          ctx.beginPath(); ctx.arc(0,0,t.R*1.1,0,6.283); ctx.fill(); ctx.restore();
+          ctx.globalAlpha=0.3*sh;
+          for(const [ox,oy,rr] of canopy){
+            const bxp=t.fx+ox*t.R, byp=t.cy+oy*t.R, br=rr*t.R*0.7;
+            const gx=bxp+(floorY-byp)*k;                       // project blob to the ground plane
+            ctx.save(); ctx.translate(gx, floorY-1); ctx.scale(1, flat);
+            ctx.beginPath(); ctx.arc(0,0,br,0,6.283); ctx.fill(); ctx.restore();
+          }
         }
+        ctx.globalAlpha=1;
         ctx.restore();
       }
       for(const t of TD) drawTree(t.fx, t.cy, t.R);
