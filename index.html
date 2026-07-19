@@ -997,6 +997,21 @@ if(!reduced){
         vy -= U*0.8*prox*climb;
         vx -= U*0.5*prox*climb;
       }
+      // warm thermal boundary layer rising off the sun-heated downstream building (roof + upper wall):
+      // it detaches at the roof edge and lifts the streaklines above the roof, reaching a little upstream too
+      {
+        const wallHeat=solarMul()*(greenwall?0.4:1)*(roof?0.55:1);   // driven by sun, damped by greenery
+        const xc=bx2;
+        const hx = x<xc ? Math.exp(-Math.pow((x-xc)/(0.13*W),2))     // a bit upstream of the roof edge
+                        : Math.exp(-Math.pow((x-xc)/(0.34*W),2));    // and out over the building roof
+        const above=roofR-y;                                        // >0 in the free stream above the tall roof
+        if(above>-0.015*H && hx>0.02){
+          const vz=Math.exp(-Math.pow(Math.max(0,above)/(0.24*H),2)); // strongest at roof, fades upward
+          const lift=wallHeat*0.85*hx*vz;
+          vy -= lift;
+          vx += lift*0.3;                                            // advected slightly downstream as it rises
+        }
+      }
     } else if(inX){
       const dx=(x-cx)/(cw*0.5), dy=(y-cyc)/(ch*0.5);
       const r=Math.min(1,Math.hypot(dx,dy));
