@@ -293,6 +293,8 @@ a.card{display:block;color:inherit;text-decoration:none}
 .cy-v{font-family:var(--mono);font-size:10.5px;color:var(--text-3);letter-spacing:.04em;margin-top:2px}
 .cy-controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:center;padding:13px 16px;border-top:1px solid var(--line);background:rgba(15,21,32,.5)}
 .cy-ctl{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12px;color:var(--text-2)}
+.cy-lbl{display:inline-flex;align-items:center;gap:5px}
+.cy-ico{flex:0 0 auto;display:block}
 .cy-ctl input[type=range]{-webkit-appearance:none;appearance:none;width:118px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--cool),var(--accent));outline:none}
 .cy-ctl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:#e6edf5;border:2px solid var(--accent);cursor:pointer}
 .cy-ctl input[type=range]::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:#e6edf5;border:2px solid var(--accent);cursor:pointer}
@@ -590,8 +592,8 @@ footer a:hover{color:var(--accent)}
           <div class="cy-readout"><div class="cy-t" id="cy-temp">+5.0 °C</div><div class="cy-v" id="cy-vent">ventilation: weak</div></div>
         </div>
         <div class="cy-controls">
-          <div class="cy-ctl">wind <input type="range" id="cy-wind" min="0" max="100" value="28" aria-label="wind speed"></div>
-          <div class="cy-ctl">sun <input type="range" id="cy-solar" min="0" max="100" value="65" aria-label="solar heating"></div>
+          <div class="cy-ctl"><span class="cy-lbl"><svg class="cy-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--cool)" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 8h8.5a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h13a2.7 2.7 0 1 1-2.7 2.7"/><path d="M3 16h6.5a2.2 2.2 0 1 1-2.2 2.2"/></svg>wind</span> <input type="range" id="cy-wind" min="0" max="100" value="28" aria-label="wind speed"></div>
+          <div class="cy-ctl"><span class="cy-lbl"><svg class="cy-ico" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.3" fill="var(--accent)"/><g stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="2.5" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21.5"/><line x1="2.5" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21.5" y2="12"/><line x1="5.3" y1="5.3" x2="7" y2="7"/><line x1="17" y1="17" x2="18.7" y2="18.7"/><line x1="18.7" y1="5.3" x2="17" y2="7"/><line x1="7" y1="17" x2="5.3" y2="18.7"/></g></svg>sun</span> <input type="range" id="cy-solar" min="0" max="100" value="65" aria-label="solar heating"></div>
           <div class="cy-toggles">
             <span class="cy-toggle" id="cy-trees" role="button" tabindex="0">🌳 street trees</span>
             <span class="cy-toggle" id="cy-wall" role="button" tabindex="0">🧱 green wall</span>
