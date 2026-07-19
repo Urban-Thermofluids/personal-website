@@ -595,6 +595,7 @@ footer a:hover{color:var(--accent)}
           <div class="cy-toggles">
             <span class="cy-toggle" id="cy-trees" role="button" tabindex="0">🌳 street trees</span>
             <span class="cy-toggle" id="cy-wall" role="button" tabindex="0">🧱 green wall</span>
+            <span class="cy-toggle" id="cy-roof" role="button" tabindex="0">🌿 green roof</span>
             <span class="cy-toggle cool" id="cy-ac" role="button" tabindex="0">❄️ indoor AC</span>
           </div>
         </div>
@@ -899,7 +900,20 @@ if(!reduced){
     W=cssW; H=cssH;
     bx1=0.30*W; bx2=0.70*W; roofY=0.34*H; floorY=0.88*H;
     cx=(bx1+bx2)/2; cyc=(roofY+floorY)/2; cw=bx2-bx1; ch=floorY-roofY;
-    computeTD(); computeGW(); computeWIN();
+    computeTD(); computeGW(); computeWIN(); computeRV();
+  }
+  // green-roof planting: fixed carpet of low clumps + grass tufts along both rooftops
+  function computeRV(){
+    const clumps=[], blades=[];
+    for(const [xa,xb] of [[0.06*W,bx1],[bx2,0.94*W]]){
+      for(let x=xa+2; x<xb-1;){
+        const r=2.3+Math.random()*3.4;
+        clumps.push({x, y: roofY-1-Math.random()*3, r, s: Math.random()});
+        if(Math.random()<0.34) blades.push({x, h:3+Math.random()*5, dx:(Math.random()-0.5)*2.4});
+        x += Math.max(3.4, r*0.85);
+      }
+    }
+    RV={clumps, blades};
   }
   // varied window states (fixed, so they don't flicker): mostly dim at differing brightness, a few lit warm
   let WIN=[];
@@ -930,7 +944,7 @@ if(!reduced){
     }
     GW={leaves, x0, w};
   }
-  let windUI=0.28, solarUI=0.65, trees=false, greenwall=false, ac=false, T=0, TD=[], GW={leaves:[],x0:0,w:0};
+  let windUI=0.28, solarUI=0.65, trees=false, greenwall=false, ac=false, roof=false, T=0, TD=[], GW={leaves:[],x0:0,w:0}, RV={clumps:[],blades:[]};
   const solarMul = ()=> 0.28 + solarUI*1.12;
   document.getElementById('cy-wind').addEventListener('input', e=>{ windUI=e.target.value/100; });
   document.getElementById('cy-solar').addEventListener('input', e=>{ solarUI=e.target.value/100; });
@@ -941,6 +955,7 @@ if(!reduced){
   }
   bindToggle('cy-trees', v=>trees=v);
   bindToggle('cy-wall', v=>greenwall=v);
+  bindToggle('cy-roof', v=>roof=v);
   bindToggle('cy-ac', v=>ac=v);
 
   let P=[];
@@ -1001,6 +1016,10 @@ if(!reduced){
     return [vx,vy];
   }
   function localSource(x,y){
+    // hot roofs warm the free-stream air just above them; a green roof removes this (mostly a roof-level effect)
+    if(!roof && y<roofY && y>roofY-0.16*H && ((x>0.07*W && x<bx1) || (x>bx2 && x<0.93*W))){
+      return solarMul()*0.55*((y-(roofY-0.16*H))/(0.16*H));
+    }
     if(!(x>bx1 && x<bx2)) return 0;
     let s=0; const sun=solarMul();
     if(y>floorY-0.12*H) s += sun*(trees?0.4:1.0);       // sun-heated street floor
@@ -1044,11 +1063,12 @@ if(!reduced){
     sky.addColorStop(0,'rgba(255,190,110,'+(0.025+s*0.06).toFixed(3)+')');
     sky.addColorStop(1,'rgba(255,190,110,0)');
     ctx.fillStyle=sky; ctx.fillRect(0,0,W,roofY+0.04*H);
-    // roofs (face up → lit)
-    const roof=(x0,w)=>{ const g=ctx.createLinearGradient(0,roofY,0,roofY+0.04*H);
-      g.addColorStop(0,warm(0.07+s*0.16)); g.addColorStop(1,warm(0));
+    // roofs (face up → lit); a green roof keeps them from heating up
+    const rwf = roof ? 0.15 : 1;
+    const roofLit=(x0,w)=>{ const g=ctx.createLinearGradient(0,roofY,0,roofY+0.04*H);
+      g.addColorStop(0,warm((0.07+s*0.16)*rwf)); g.addColorStop(1,warm(0));
       ctx.fillStyle=g; ctx.fillRect(x0,roofY,w,0.04*H); };
-    roof(0.06*W,bx1-0.06*W); roof(bx2,0.94*W-bx2);
+    roofLit(0.06*W,bx1-0.06*W); roofLit(bx2,0.94*W-bx2);
     // sunlit canyon façade = right building's left face (faces up-left)
     const rf=ctx.createLinearGradient(bx2,0,bx2-0.045*W,0);
     rf.addColorStop(0,warm(0.08+s*0.17)); rf.addColorStop(1,warm(0));
@@ -1067,6 +1087,20 @@ if(!reduced){
     ctx.fillStyle=grd; ctx.fillRect(bx1,floorY-0.12*H,cw,0.12*H);
   }
   function drawVeg(){
+    if(roof){
+      // planted rooftops: soil substrate + a low vegetation carpet of clumps and grass tufts
+      for(const [xa,xb] of [[0.06*W,bx1],[bx2,0.94*W]]){
+        ctx.fillStyle='rgba(58,44,32,.92)'; ctx.fillRect(xa, roofY-1, xb-xa, 4);      // substrate
+        ctx.fillStyle='rgba(20,15,10,.45)'; ctx.fillRect(xa, roofY+3, xb-xa, 1.4);    // edge shadow
+      }
+      ctx.strokeStyle='rgba(104,176,120,.7)'; ctx.lineWidth=1; ctx.lineCap='round';   // grass tufts
+      for(const bl of RV.blades){ ctx.beginPath(); ctx.moveTo(bl.x, roofY); ctx.quadraticCurveTo(bl.x+bl.dx, roofY-bl.h*0.6, bl.x+bl.dx*1.6, roofY-bl.h); ctx.stroke(); }
+      for(const c of RV.clumps){                                                       // foliage clumps
+        ctx.fillStyle = c.s<0.34?'rgba(52,112,74,.97)':c.s<0.72?'rgba(92,168,112,.96)':'rgba(150,220,176,.92)';
+        blob(c.x, c.y, c.r);
+      }
+      for(const c of RV.clumps){ if(c.s>0.55){ ctx.fillStyle='rgba(170,236,192,.5)'; blob(c.x-c.r*0.3, c.y-c.r*0.35, c.r*0.42); } }  // sunlit highlights
+    }
     if(greenwall){
       const x0=GW.x0, w=GW.w;
       // planted substrate panel
@@ -1142,6 +1176,7 @@ if(!reduced){
     const vent=1+3.4*windUI;
     let target=0.6+surfaceHeat*6.4/vent;
     if(ac) target += 0.5;                       // AC waste heat warms the canyon
+    if(roof) target = Math.max(0.6, target-0.35); // green roof: small street-level cooling (mostly a roof-level effect)
     anomShown += (target-anomShown)*0.06;
     const el=document.getElementById('cy-temp');
     el.textContent='+'+anomShown.toFixed(1)+' °C';
